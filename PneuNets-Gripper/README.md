@@ -1,4 +1,4 @@
-Simulating and Controlling a PneuNets-Gripper with Sofa-SR
+Simulating and Controlling a PneuNets-Gripper
 =======================
 
 
