@@ -1,6 +1,8 @@
 Fabricating, Simulating and Controlling a PneuNets-Gripper
 =======================
-Contributors: Marwa Eldiwiny Eulalie Coevot, Damien Marchal, Olivier Goury, 
+Contributors: Marwa Eldiwiny Eulalie Coevot, Damien Marchal, Olivier Goury
+
+![PneuNets gripper](./images/mockup.png)
 
 #### Introduction
 This tutorial is about modeling, simulating and fabricating a soft gripper made with PneuNets actuators in Sofa-SR. PneuNets (pneumatic networks) are a class of soft actuator originally developed by the Whitesides Research Group at Harvard. They are made up of a series of channels and chambers inside an elastomer. These channels inflate when pressurized, creating motion. With three of such actuators it is possible to make a soft gripper. 
