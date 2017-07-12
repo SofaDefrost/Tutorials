@@ -18,7 +18,7 @@ Otherwise you need to get sofa & its soft-robotic toolkit plugin:
 - Soft-Robotic Toolkit plugin (from https://project.inria.fr/softrobot/)
 
 #### This Tutorials is composed of four parts. 
-- Modeling
+- [Modelling](step1-VolumetricMeshGeneretion/MeshTetraGeneration.html)
 - Fabrication
 - Simulation
 - Control
