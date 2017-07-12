@@ -10,7 +10,7 @@ motion.
 
 Sofa-SRT is a modeling, simulation and control environment for Soft-Robotics. It is available from https://project.inria.fr/softrobot/
 
-This tutorials is freely adapted from  https://softroboticstoolkit.com/book/pneunets-bending-actuator, the big difference is on how to use the Sofa+Soft-Robot for modelling and simulation. 
+This tutorials is freely adapted from  https://softroboticstoolkit.com/book/pneunets-bending-actuator, the big difference is on how to use the Sofa+Soft-Robot for modeling and simulation and control. 
 
 
 #### Prerequisites
