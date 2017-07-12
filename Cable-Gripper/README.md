@@ -3,7 +3,7 @@ Modeling and simulating a cable based gripper with Sofa-SR
 
 
 #### Introduction
-![IntroImage](/data/images/gripper2.png)
+![IntroImage](data/images/gripper2.png)
 
 This tutorial is about modeling, simulating and fabricating a soft gripper actuated with cable using Sofa-SR. 
 
