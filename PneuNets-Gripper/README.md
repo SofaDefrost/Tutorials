@@ -1,13 +1,13 @@
 Fabricating, Simulating and Controlling a PneuNets-Gripper
 =======================
-
+Contributors: Marwa Eldiwiny Eulalie Coevot, Damien Marchal, Olivier Goury, 
 
 #### Introduction
-This tutorial is about modeling, simulating and fabricating a soft gripper made with PneuNets actuators. PneuNets (pneumatic networks) are a class of soft actuator originally developed by the Whitesides Research Group at Harvard. They are made up of a series of channels and chambers inside an elastomer. These channels inflate when pressurized, creating motion. With three of such actuators it is possible to make a soft gripper. 
+This tutorial is about modeling, simulating and fabricating a soft gripper made with PneuNets actuators in Sofa-SR. PneuNets (pneumatic networks) are a class of soft actuator originally developed by the Whitesides Research Group at Harvard. They are made up of a series of channels and chambers inside an elastomer. These channels inflate when pressurized, creating motion. With three of such actuators it is possible to make a soft gripper. 
 
-For fabrication we will use Laser-cutting and 3D-printing devices while simulation is done using Sofa-SR. Sofa-SR is a modeling, simulation and control environment for Soft-Robotics using Sofa a real-time simulation framework for rigid and deformable mechanics. Sofa-SR is available from https://project.inria.fr/softrobot/
+For fabrication we wanted to try the new Laser-cutting device available in the FabLab to see if it was easier than our classical 3D-printing workflow. The simulation aspects is done using Sofa-SR. Sofa-SR is a modeling, simulation and control environment for Soft-Robotics using Sofa a real-time simulation framework for rigid and deformable mechanics. Sofa-SR is available from https://project.inria.fr/softrobot/
 
-This tutorials is freely adapted from  https://softroboticstoolkit.com/book/pneunets-bending-actuator, the big difference is on how to use the Sofa+Soft-Robot for modeling and simulation and control. 
+This tutorials is strongly inspired from https://softroboticstoolkit.com/book/pneunets-bending-actuator, the biggest difference is on how to use the Sofa+Soft-Robot for modeling and simulation and control. 
 
 
 #### Prerequisites
