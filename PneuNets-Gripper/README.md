@@ -1,4 +1,4 @@
-Modeling and simulating PneuNets with Sofa-SR
+Simulating and Controlling a PneuNets-Gripper with Sofa-SR
 =======================
 
 
@@ -18,7 +18,7 @@ To follow this tutorial you need a working version of Sofa. We provide a Linux d
 
 Otherwise you need to get sofa & its soft-robotic toolkit plugin:
 - Sofa (from http://www.sofa-framework.org)
-- Soft-Robotic Toolkit plugin (from https://project.inria.fr/softrobot/)
+- Soft-Robotic plugin (from https://project.inria.fr/softrobot/)
 
 #### This Tutorials is composed of: 
 - [Modeling](parts/modeling.md)
