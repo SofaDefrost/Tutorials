@@ -2,8 +2,7 @@ Modeling and simulating PneuNets with Sofa-SRT
 =======================
 
 
-#### Introduction
-
+#### Introduction
 This tutorial is about modelling, simulating and fabricating the PneuNets actuators. 
 
 PneuNets (pneumatic networks) are a class of soft actuator originally developed by the Whitesides Research Group at Harvard. They are made up of a series of channels and chambers inside an elastomer. These channels inflate when pressurized, creating 
