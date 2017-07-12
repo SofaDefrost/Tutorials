@@ -18,7 +18,7 @@ Otherwise you need to get sofa & its soft-robotic toolkit plugin:
 - Soft-Robotic plugin (from https://project.inria.fr/softrobot/)
 
 #### This Tutorials is composed of: 
-- [Modeling](parts/modeling.md)
-- [Simulation](parts/simulation.md)
-- [Fabrication](parts/fabrication.md)
-- [Control](parts/control.md)
+- [Modeling](docs/modeling.md)
+- [Simulation](docs/simulation.md)
+- [Fabrication](docs/fabrication.md)
+- [Control](docs/control.md)
