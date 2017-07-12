@@ -1,4 +1,4 @@
-Simulating and Controlling a PneuNets-Gripper
+Fabricating, Simulating and Controlling a PneuNets-Gripper
 =======================
 
 
