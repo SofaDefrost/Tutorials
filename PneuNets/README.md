@@ -1,4 +1,4 @@
-Modeling and simulating PneuNets with Sofa-SRT
+Modeling and simulating PneuNets with Sofa-SR
 =======================
 
 
@@ -8,7 +8,7 @@ This tutorial is about modelling, simulating and fabricating the PneuNets actuat
 PneuNets (pneumatic networks) are a class of soft actuator originally developed by the Whitesides Research Group at Harvard. They are made up of a series of channels and chambers inside an elastomer. These channels inflate when pressurized, creating 
 motion.
 
-Sofa-SRT is a modeling, simulation and control environment for Soft-Robotics. It is available from https://project.inria.fr/softrobot/
+Sofa-SR is a modeling, simulation and control environment for Soft-Robotics using Sofa a real-time simulation framework for rigid and deformable mechanics. Sofa-SR is available from https://project.inria.fr/softrobot/
 
 This tutorials is freely adapted from  https://softroboticstoolkit.com/book/pneunets-bending-actuator, the big difference is on how to use the Sofa+Soft-Robot for modeling and simulation and control. 
 
