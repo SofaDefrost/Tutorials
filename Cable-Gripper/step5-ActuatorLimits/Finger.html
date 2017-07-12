@@ -1,0 +1,27 @@
+<html>
+
+<head>
+<link href="../../../../../examples/Objects/sofa_white.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body bgcolor="#F0F8FF">
+
+	<div id="contenu">
+
+        	<h1>Step 5: Actuator Limits. </h1>
+		
+        <p>In the previous steps, we showed how to control the deformation of the soft robot by actuator control (direct simulation) or effector control (inverse simulation). We can additionnally add some limits on the actuators (maximum force, maximum displacement... for a cable, we assume that the force can not be negative: it pulls but can not push...). </p>
+		
+		<br>
+		<center><img src="../data/images/Finger_6.png"/></center>
+			
+	        <h2>How to use the demo ?</h2>
+            <p> If you try to impose a displacement of the effector that exceeds the maximum displacement allowed on the cable, the optimization finds the minimal reachable distance to the goal. You can edit this maximum allowed displacement in the component "CableActuator": click on the graph on the left, see Property 2/2 and edit the field maxPositiveDisp (for instance put 20 instead of 40: it means that the maximum displacement in the pulling direction is now 20mm). Then click on Update and retry. You should obtain this:<p>
+            
+        <center><img src="../data/images/Finger_7.png"/></center>
+
+	</div>
+
+</body>
+
+</html>

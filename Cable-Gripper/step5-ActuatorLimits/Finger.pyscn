@@ -1,0 +1,111 @@
+# -*- coding: utf-8 -*-
+
+import Sofa
+
+import os
+path = os.path.dirname(os.path.abspath(__file__))+'/../data/mesh/'
+
+def createScene(rootNode):
+				rootNode.createObject('RequiredPlugin', pluginName='SoftRobots')
+				rootNode.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels showCollisionModels hideBoundingCollisionModels hideForceFields showInteractionForceFields hideWireframe')
+
+				rootNode.createObject('FreeMotionAnimationLoop')
+				rootNode.createObject('QPInverseProblemSolver', printLog='1')
+				rootNode.createObject('CollisionPipeline', verbose="0")
+				rootNode.createObject('BruteForceDetection', name="N2")
+				rootNode.createObject('CollisionResponse', response="FrictionContact", responseParams="mu=0")
+				rootNode.createObject('LocalMinDistance', name="Proximity", alarmDistance="5", contactDistance="1")
+
+
+				rootNode.createObject('BackgroundSetting', color='0 0.168627 0.211765')
+				rootNode.createObject('OglSceneFrame', style="Arrows", alignment="TopRight")
+
+				##########################################
+				# FEM Model                              #
+				##########################################
+				finger = rootNode.createChild('finger')
+				finger.createObject('EulerImplicit', name='odesolver', firstOrder='1')
+				finger.createObject('SparseLDLSolver')
+
+				finger.createObject('MeshVTKLoader', name='loader', filename=path+'finger.vtk')
+				finger.createObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
+				finger.createObject('TetrahedronSetTopologyModifier')
+				finger.createObject('TetrahedronSetTopologyAlgorithms', template='Vec3d')
+				finger.createObject('TetrahedronSetGeometryAlgorithms', template='Vec3d')
+
+				finger.createObject('MechanicalObject', name='tetras', template='Vec3d')
+				finger.createObject('UniformMass', totalmass='0.5')
+				finger.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus='18000')
+
+				finger.createObject('BoxROI', name='ROI', box='-15 0 0 5 10 15', drawBoxes='true')
+
+				finger.createObject('RestShapeSpringsForceField', points='@ROI.indices', stiffness='1e12')
+
+				finger.createObject('LinearSolverConstraintCorrection')
+
+				##########################################
+				# Visualization                          #
+				##########################################
+
+				fingerVisu = finger.createChild('visu')
+				fingerVisu.createObject('OglModel', filename=path+"finger.stl", template='ExtVec3f', color="0.0 0.7 0.7")
+				fingerVisu.createObject('BarycentricMapping')
+
+				##########################################
+				# Cable                                  #
+				##########################################
+
+				cable = finger.createChild('cable')
+				cable.createObject('MechanicalObject',
+						position=(
+								" -17.5 12.5 2.5 " +
+								" -32.5 12.5 2.5 " +
+								" -47.5 12.5 2.5 " +
+								" -62.5 12.5 2.5 " +
+								" -77.5 12.5 2.5 " +
+
+								" -83.5 12.5 4.5 " +
+								" -85.5 12.5 6.5 " +
+								" -85.5 12.5 8.5 " +
+								" -83.5 12.5 10.5 " +
+
+								" -77.5 12.5 12.5 " +
+								" -62.5 12.5 12.5 " +
+								" -47.5 12.5 12.5 " +
+								" -32.5 12.5 12.5 " +
+								" -17.5 12.5 12.5 " ))
+
+				# Set a maximum displacement for your cable
+				cable.createObject('CableActuator', name="aCable",
+						indices='0 1 2 3 4 5 6 7 8 9 10 11 12 13',
+						pullPoint="0.0 12.5 2.5",
+						maxPositiveDisp="40",
+						minForce="0")
+
+				cable.createObject('BarycentricMapping')
+
+
+				##########################################
+				# Effector goal for interactive control  #
+				##########################################
+				goal = rootNode.createChild('goal')
+				goal.createObject('EulerImplicit', firstOrder='1')
+				goal.createObject('CGLinearSolver', iterations='100', tolerance="1e-5", threshold="1e-5")
+				goal.createObject('MechanicalObject', name='goalMO',
+								  position='-120  7.36479  7.14143')
+				goal.createObject('Sphere', radius='5')
+				goal.createObject('UncoupledConstraintCorrection')
+
+
+				  ##########################################
+				# Effector                               #
+				##########################################
+				effector = finger.createChild('fingertip')
+				effector.createObject('MechanicalObject',
+						position=("-103.071  7.36479  7.14143"))
+				effector.createObject('PositionEffector', template='Vec3d',
+						indices="0",
+						effectorGoal="@../../goal/goalMO.position")
+				effector.createObject('BarycentricMapping', mapForces="false", mapMasses="false")
+
+				return rootNode
