@@ -1,6 +1,6 @@
 Fabricating, Simulating and Controlling a PneuNets-Gripper
 =======================
-Contributors: Marwa Eldiwiny Eulalie Coevot, Damien Marchal, Olivier Goury
+Contributors: Marwa Eldiwiny Eulalie Coevoet, Damien Marchal, Olivier Goury
 
 ![PneuNets gripper](./images/mockup.png)
 
