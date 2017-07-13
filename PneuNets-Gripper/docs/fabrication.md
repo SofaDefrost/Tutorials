@@ -16,18 +16,21 @@ Now the drawback of having a laser cutting is that we have much more work to do 
 ---
 
 ### Silicon casting
-We used xx yy silicon...mixed in ...
+We used xx yy silicon...mixed in ...<br>
 <img src="../images/casting3.jpeg" align="left" width="320" />
 <img src="../images/casting2.jpeg" align="middle" width="320" />
 
+---
 
 ### Mounting plateform
-The mounting plateform is holding the three PneuNets actuators on a structure of triangular shape. The structure should also be used to hold the different pipes and air distribution system as well as a way to connect the gripper to a real 3-DOF robotic arm. 
+The mounting plateform is holding the three PneuNets actuators on a structure of triangular shape. The structure should also be used to hold the different pipes and air distribution system as well as a way to connect the gripper to a real 3-DOF robotic arm. <br>
 <img src="../images/fab1.jpg" align="left" width="200" />
+
+---
 
 ### Pressure system and controller
 The pressure system is composed of serhingues actuated by a stepper motor. 
-The stepper motor is controlled using an Arduino. 
+The stepper motor is controlled using an Arduino. <br>
 
 <img src="../images/fab2.jpg" align="middle" width="320" />
 
