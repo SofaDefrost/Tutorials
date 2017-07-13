@@ -9,10 +9,11 @@ The first way is to place springs between some nodes of the deformable surface a
 The second way is to fuse the degrees of freedom of the rollers and the deformable surface.
 
 
-### Attachement with springs
+### Method 1: Attachement with springs
 At the creation of the simulation scene, we will create the springs between the mesh and the roller, to simulate a kind of "glue". 
 ![Attach_concept](../images/Attach_1.tiff)
-
+   
+#### Python code
 In the creation of the scene, we take the positions of the nodes of the mesh. We detect the nodes of the mesh that are placed on the part where we want to attach the nodes. Then, we fill two lists:
 * mapPos that contains the position of the attachement in the local frame of the Roller
 * indices which contains the indices of the attached nodes
@@ -49,6 +50,9 @@ Then, we will use these two lists to create:
 ```python
         rubber.createObject('RestShapeSpringsForceField', points=transformTableInString(indices), stiffness='1000', external_rest_shape='../cylinder/cylinderAttachPoints/attachPointsMO')
 ```
+
+#### Results
+![Video](../videos/attachement.mov)
 
 #### Advantage
 This method is quite simple to implement and does not create much additional computation costs
