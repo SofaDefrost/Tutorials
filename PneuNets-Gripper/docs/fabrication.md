@@ -31,7 +31,11 @@ The mounting plateform is holding the three PneuNets actuators on a single struc
 ### Pressure system and controller
 
 The pressure system is composed of serhingues actuated by a stepper motor. 
-The stepper motor is controlled using an Arduino. <br>
+The stepper motor is controlled using an Arduino. 
 
-<img src="../images/fab2.jpg" align="middle" width="320" />
+<div style="text-align:center;width:20%;margin: 0 25% 0;">
+   <img src="../images/fab2.jpg" align="middle" style="width: 20%;" />
+
+</div>
+
 
