@@ -5,9 +5,10 @@ Design
 
 The gripper is composed of three pneumatic actuators. 
 
-<img src="../images/mockup.png" align="left" width="1000"/>
+<img src="../images/mockup_numbers.png" align="middle" width="500"/>
 
-##### PneuNets Actuator
+
+##### 1 PneuNets Actuator
 
 Very detailled description of the PneuNets actuators can be found at the Soft robotics Toolkit pages: https://softroboticstoolkit.com/book/pneunets-bending-actuator. We followed their approach and used FreeCAD to design our own actuator.
 
@@ -18,7 +19,7 @@ Very detailled description of the PneuNets actuators can be found at the Soft ro
 <br/><br/><br/><br/><br/><br/><br/><br/>
 We provide the FreeCAD project "pneunet.fcstd" in the directory [PneuNets-Gripper/modeling](https://github.com/SofaDefrost/Tutorials/tree/master/PneuNets-Gripper/modeling).
 
-##### Gripper Mounting Platform
+##### 2 Gripper Mounting Platform
 TODO: describe a bit the design and add images
 
 
