@@ -4,7 +4,11 @@ Contributors: Zhongkai Zhang, Piyush Jain, Erwan Douaille, Jeremie Dequidt, Chri
 
 ### Introduction
 
-This tutorial is about modeling, simulating and fabricating an original soft gripper called __w-Gripper_ in Sofa-SR. `TODO: details about the gripper`. The simulation aspects is done using Sofa-SR. Sofa-SR is a modeling, simulation and control environment for Soft-Robotics using Sofa a real-time simulation framework for rigid and deformable mechanics. Sofa-SR is available from https://project.inria.fr/softrobot/
+This tutorial is about modeling, simulating and fabricating an original soft gripper called __WGripper__ in Sofa-SR.
+
+The WGripper has to grasp any small phsysical object such has pens or lighters. Objects will be grasped by a rubber band attached on two cylinders. Those cylinders will be rotated by two actuators, the rotation will stretch or compress the rubber band. During the compression, the object will be stuck by the gripper in the gap between the two cylinders.
+
+The simulation aspects is done using Sofa-SR. Sofa-SR is a modeling, simulation and control environment for Soft-Robotics using Sofa a real-time simulation framework for rigid and deformable mechanics. Sofa-SR is available from https://project.inria.fr/softrobot/
 
 This tutorials is strongly inspired from https://softroboticstoolkit.com/book/pneunets-bending-actuator, the biggest difference is on how to use the Sofa+Soft-Robot for modeling and simulation and control. 
 
