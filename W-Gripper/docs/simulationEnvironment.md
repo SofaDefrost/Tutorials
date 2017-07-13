@@ -10,21 +10,22 @@ Let's create our floor function:
         ################################ Fix Floor ################################
   def createFloor(node):
         floorNode = node.createChild('Floor') ## create a new graphe node dedicated to the floor
-        floorNode.createObject('MeshObjLoader', name='loader', filename="mesh/floorFlat.obj", rotation="0 0 270", scale =5, translation="30 0 0") ## 
-        floorNode.createObject('Mesh', src="@loader")
-        floorNode.createObject('MechanicalObject', src="@loader")
-        floorNode.createObject('Triangle',simulated="0", moving="0")
-        floorNode.createObject('Line',simulated="0", moving="0")
-        floorNode.createObject('Point',simulated="0", moving="0")
-        floorNode.createObject('OglModel',name="Visual", fileMesh="mesh/floorFlat.obj", color="1 0 0 1",rotation="0 0 270", scale =5, translation="30 0 0")
+        floorNode.createObject('MeshObjLoader', name='loader', filename="mesh/floorFlat.obj", rotation="0 0 270", scale =5, translation="30 0 0") ## Mesh Obj loader will load the floorFlat.obj file and then we rotate/translate/scale 
+        floorNode.createObject('Mesh', src="@loader") ## Mesh is loaded using the MeshObjLoader reference @loader
+        floorNode.createObject('MechanicalObject', src="@loader") ##
+        floorNode.createObject('Triangle',simulated="0", moving="0") ## collision model will react with triangles
+        floorNode.createObject('Line',simulated="0", moving="0") ## collision model will react with lines
+        floorNode.createObject('Point',simulated="0", moving="0") ## collision model will react with points
+        floorNode.createObject('OglModel',name="Visual", fileMesh="mesh/floorFlat.obj", color="1 0 0 1",rotation="0 0 270", scale =5, translation="30 0 0") ## The visual part using the floorFlat.obj available by default in sofa/share/mesh
         return floorNode
 ```
+
 And add it to the createScene function : 
 
 ```python
         floorNode = createFloor(rootNode)
 ```
-
+Then the grasped object. This one will be more complicated because it will interract with the rubber band. 
 ```python
 ################################ Grasped Object ###################################
 def createGraspedObject(node):
@@ -66,3 +67,4 @@ And add it to the createScene function :
 ```python
         graspedObjectNode = createGraspedObject(rootNode)
 ```
+Congratulation ! We have the basics of the simulation. Continue to the step 2 : [Rollers](simulationRollers.md) 
