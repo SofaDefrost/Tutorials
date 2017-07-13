@@ -16,7 +16,7 @@ Now the drawback of having a laser cutting is that we have much more work to do 
 ---
 
 ### Silicon casting
-We used xx yy silicon...mixed in ...<br><br><br><br>
+We used xx yy silicon...mixed in ...The silicon pour the mold. To rigidify the curving part of the actuator we are using a piece of tissue embedded directly between two layers of silicon. <br><br><br><br>
 
 <img src="../images/casting3.jpeg" align="left" height="150" />
 <img src="../images/casting2.jpeg" align="middle" height="150" />
@@ -43,6 +43,10 @@ The mounting plateform is holding the three PneuNets actuators on a single struc
 
 The pressure system is composed of serhingues actuated by a stepper motor. 
 The stepper motor is controlled using an Arduino. The Arduino is connected to a PC using an usb cable and serial emulation. 
-The Arduino board then communicate with the Sofa-PR simulation to get the commands. 
+The Arduino board then communicate with the Sofa-PR simulation to get the commands. The stepper motor is controlled by the number of step to do. <br><br><br>
 
 <img src="../images/fab2.jpg" align="left" height="200" /> 
+
+
+To link the steps with the air volume a calibration has to be done in which we measure how much steps we can do before touching the serhingue boundaries. In our prototype, 1400 steps are corresponding to 30ml. As the command from Sofa-RT is also in air volume a simple linear relationship implemented on the Arduino board manage the conversion. 
+
