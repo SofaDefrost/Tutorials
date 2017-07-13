@@ -24,9 +24,7 @@ We used xx yy silicon...mixed in ...<br>
 ---  
 
 ### Mounting plateform
-The mounting plateform is holding the three PneuNets actuators on a structure of triangular shape. The structure should also be used to hold the different pipes and air distribution system as well as a way to connect the gripper to a real 3-DOF robotic arm. <br><br><br>
-
-<img src="../images/fab1.jpg" align="left" width="200" />
+The mounting plateform is holding the three PneuNets actuators on a single structure. The structure should also be used to hold the different pipes and the air distribution system. We also wanted to have the structure to be connected to to a real 3-DOF robotic arm. The structure is done using the laser printing devices from the Inkscape files available at [this location](design.md). The resulting pieces are then assembled.<br><br><br> <img src="../images/fab1.jpg" align="left" width="200" />
 
 ---
 
@@ -36,3 +34,4 @@ The pressure system is composed of serhingues actuated by a stepper motor.
 The stepper motor is controlled using an Arduino. <br>
 
 <img src="../images/fab2.jpg" align="middle" width="320" />
+
