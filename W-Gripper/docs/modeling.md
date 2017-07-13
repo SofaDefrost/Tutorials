@@ -8,7 +8,7 @@ Since the geometry of the gripper is simple, modeling the gripper in any of CAD 
 
 ![Surface Mesh](../images/WGripper_Surface_Mesh.png)
 
-![Surface Mesh with Quads](../images/WGripper_Surface_Mesh_Rendered.png.png)
+![Surface Mesh with Quads](../images/WGripper_Surface_Mesh_Rendered.png)
 
 ## Volumetric Mesh 
 
