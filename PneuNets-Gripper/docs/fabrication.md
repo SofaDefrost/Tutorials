@@ -18,8 +18,12 @@ Now the drawback of having a laser cutting is that we have much more work to do 
 ### Silicon casting
 We used xx yy silicon...mixed in ...<br><br><br><br>
 
-<img src="../images/casting3.jpeg" align="left" width="320" />
-<img src="../images/casting2.jpeg" align="middle" width="320" />
+<img src="../images/casting3.jpeg" align="left" height="150" />
+<img src="../images/casting2.jpeg" align="middle" height="150" />
+<br>
+<br>
+<br>
+<br>
 
 ---  
 
