@@ -18,4 +18,11 @@ Starting from the 3D model (surface mesh), it is mandatory to compute volume ele
 
 ### with Hexahedra
 
+Building hexaedral volumes can be a tedious task given the geometry we want to mesh. For the W-Gripper, the simple geometry (a planar mesh extruded along the Y-axis) enables to compute hexaedra. For that we will rely on a SOFA component called `ExtrudeQuadsAndGenerateHexas`. There are two important parameters for this component: `thicknessOut` (how depth will be the extrusion) and `numberOfSlices` (how many slices will be build along the extrusion axis).
+
+~~~
+import Sofa
+import os
+~~~
+
 ![Hexahedral Mesh](../images/WGripper_Volume_Mesh_hexa.png)
