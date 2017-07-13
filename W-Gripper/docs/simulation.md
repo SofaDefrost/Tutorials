@@ -79,7 +79,12 @@ def createScene(rootNode):
   
   The *controllerGripper.py* file consists in a separate file responsible for managing the control during the simulation. For instance, the  pressing of the "CTRL" key simultaneously with the up or down arrow on the keyboard allows the cylinders to go up or down in the simulation. The same principle is to press "CTRL" with the "+" or "-" key in order to make the cylinders rotate clockwise or counter-clockwise with different speeds according to the number of times the "+" or the "-" key is pressed. These commands are necessary to the grasping of the object, the protocol is the following one : 
   
-  1. First, the operator lower the mechanism ; the cylinders force the gripper to go downside towards the fixed floor aon which the object to grasp is laying.
-  2.
-  3.
+
+<img src="../images/WGripper_Simulation_Roller_Rotation.png" align="right" height="200"/>
+
+  1. First, the script lower the mechanism ; the cylinders force the gripper to go downside towards the fixed floor aon which the object to grasp is laying.
+  2. Second, both cylinders are rotating according to the following scheme
+  3. Finally the script puts back upwards the mechanism to its original position, the grasped object will be stuck by the gripper in the gap between the two cylinders
+<br/><br/><br/><br/><br/>
   
+Since our script has all the simulations basis, let's create the environment. Go to [step 1 : Environment](simulationEnvironment.md)
