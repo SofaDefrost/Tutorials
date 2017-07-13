@@ -1,4 +1,71 @@
-##### Simulation
+# Simulation
+
+The simulation is done using the SOFA Open Source Framework and the "Soft-Robots" Plugin  dedicated for Real-time simulation of Soft Robots. To define the simulation, a Python scene file is created and fed as input to SOFA. In the following, we will describe, step by step, the creation of scene file that perfrom the simulation of the soft Pneunet gripper. 
+
+## Volumetric Meshing and Loading
+
+To be able to simulate the soft robot, the first step is to discretise the soft robot in space, by creating a volumetric mesh, typically with tetrahedra. This can be done with any meshing tool such as Gmsh or CGAL. In this example, we use Gmsh. This will generate a vtk file containing all the information about postion of the nodes and connectivity between them through the tetrahedra.
+Here is the mesh that was used for each finger of the gripper:
+
+![Real images](../images/PneuNets-gripper_mesh.png)
+
+In a SOFA scene the mesh is loaded using the loader component:
+```python
+finger.createObject('MeshVTKLoader', name='loader', filename=path+'pneunetCutCoarse.vtk')
+```
+
+This mesh is then stored in a TetrahedronTopology component, and a MechanicalObject is component is created to store the degrees of freedom of the robot (which are the positions of all the nodes in the mesh)
+
+```python
+finger.createObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
+finger.createObject('TetrahedronSetTopologyModifier')
+finger.createObject('TetrahedronSetTopologyAlgorithms', template='Vec3d')
+finger.createObject('TetrahedronSetGeometryAlgorithms', template='Vec3d')
+finger.createObject('MechanicalObject', name='tetras', template='Vec3d', rx='0', dz='0')
+```
+
+## Constitutive law of the material and Mass
+
+### Main Body
+
+Next, we need to define what kind of material we are going to simulate, and this is done by adding a ForceField component, which describes what internal forces are created when the object is deformed. In particular, this will define how soft or stiff the material is, if it has an elastic or more complex behaviour (Hyperelastic, plastic, etc...). In this example, we use the TetrehedronFEMForceField component with corresponds to an elastic material deformation but with large rotations. Attributes such as Young's Modulus and Poisson's ratio can be set within this component:
+```python
+finger.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=500)
+```
+The mass of the material can be defined with the UniformMass component, which assumes a uniform distribution of the mass inside the body:
+```python
+finger.createObject('UniformMass', totalmass='0.0008')
+```
+### Stiff layer
+
+To define the constitutive law of the stiff layer, we will create a new node and define a new ForceField with stiffer parameters only on the points which constitute the layer. To easily define the indices of the points which will be selected, we use the boxROI components wich allows to define a box that will contain all the points of the layer.
+
+```python
+finger1.createObject('BoxROI', name='boxROISubTopo', box='-100 22.5 -8 -19 28 8')
+modelSubTopo = finger1.createChild('modelSubTopo')
+modelSubTopo.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo.tetrahedraInROI", name='container')
+modelSubTopo.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus='1500')
+```
+
+## Boundary Conditions
+
+To fix the finger in space, it is necessary to define boundary conditions on some parts of the object. This can be done in several ways in SOFA. In this case, we use the component RestShapeSpringsForceField, which creates springs between the current position of a part of the body and its initial position. The stiffness of these springs can be adjusted. In particular, setting a very large stiffness will be equivalent to fixing the points in space.
+To easily define the indices of the points which will be fixed, we use the boxROI component:
+
+```python
+finger.createObject('BoxROI', name='boxROI', box='-10 0 -20 0 30 20')
+finger.createObject('RestShapeSpringsForceField', points='@boxROI.indices', stiffness='1e12', angularStiffness='1e12')
+```
+
+## Implicit Time Integration and Matrix Solver
+
+Now that all the minimal elements of the scene have been described, it is already possible to simulate the deformation of the finger. To do that, we need to define a time integration scheme, which will define the system to be solved at each time step of the simulation, as well as a matrix solver, to solve that system and compute the updated velocities and positions of the nodes of the robot. In this case, we choose to use an Implicit Euler Scheme and a sparse direct Solver base on an LDL matrix decomposition:
+
+```python
+finger.createObject('EulerImplicit', name='odesolver')
+finger.createObject('SparseLDLSolver', name='directSolver')
+```
+
 
 The simulation is done using Sofa-RT with the following scene: 
 
