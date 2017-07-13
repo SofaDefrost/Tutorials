@@ -52,7 +52,8 @@ Then, we will use these two lists to create:
 ```
 
 #### Results
-![Video](../videos/attachement.mov)
+The result is presented in the video. We observe that the deformable mesh is "attracted" by the springs to the points defined on the rigid rollers.
+[![VIDEO](https://img.youtube.com/vi/z4GOrovo6pE/0.jpg)](https://www.youtube.com/watch?v=z4GOrovo6pE)
 
 #### Advantage
 This method is quite simple to implement and does not create much additional computation costs
