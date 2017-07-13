@@ -54,12 +54,192 @@ First of all you have to declare each motor we want to control. In this tutorial
 ```C++
 MeStepperOnBoard stepper[2] {{SLOT_1},{SLOT_2}}; 
 ```
-  We must now initialize the motors. For each motor, we can define its MaxSpeed, its acceleration, and its number of microstep. As we want the two motors to have the same behaviour, we shall fix the same parameters for both of them.
+This declaration handle all the pin declaration that you may do if you were using a simple arduino board. It makes it more easy beacause we can abstract from all the materials conections of the pin.
+  
+The MakeBlock board work the same way as an arduino. This mean we have to define the two main functions of arudino _setup_ and _loop_. The setup function will handle all the code that will be done once when the programm starts. The loop will be called reapeatedly and executed has long as the board is connected.
+
+In order to use the motors we must initialize them. For each motor, we can define its MaxSpeed, its acceleration, and its number of microstep. As we want the two motors to have the same behaviour, we shall fix the same parameters for both of them. We put this code in a function so we can call it in the arduino setup function.
+
 ```C++  
- for(int i =0;i<2;i++){
-    stepper[i].setMaxSpeed(100);
-    stepper[i].setAcceleration(20000);
-    stepper[i].setMicroStep(16);
-    stepper[i].enableOutputs();
+void StepperInit(){
+    for(int i =0;i<2;i++){
+      stepper[i].setMaxSpeed(100);
+      stepper[i].setAcceleration(20000);
+      stepper[i].setMicroStep(16);
+      stepper[i].enableOutputs();// TODO tell what this function do or see if it's usefull
+    }
+}
+```
+
+To handle the motor's rotation the library provides us two function:
+  * __stepper.move(_int_ number-of-micro-steps)__
+  * __stepper.moveTo(_int_ position)__
+Thoose function will store the desired position to make the rotation, you must call the function __stepper.run()__. Each time it is called, the motor will make one microstep toward the desired position.
+
+As we are currently handling two motors and we want them to sychronize and rotate on opposite directions we can define several function that will handle it :
+
+```C++
+void StepperMoveTo(int value)
+{
+    stepper[0].moveTo(-value);
+    stepper[1].moveTo(value);   
+}
+void StepperMove(int value)
+{
+    stepper[0].move(-value);
+    stepper[1].move(value);   
+}
+
+void StepperRun()
+{
+    stepper[0].run();
+    stepper[1].run();   
+}
+```
+As we want the motor to run repeatedly we can for now put it in the loop function. Our mains arudino's function actually look like this:
+```C++
+void setup()
+{
+	 StepperInit();
+}
+
+void loop()
+{
+   StepperRun();
+}
+```
+The problem is we actually want to be able to control the rotation of the motors and send the wanted position to the arduino so he command the motors to move so. In order to communicate with the arduino, we will use Serial communication ([for more information see Serial] (https://www.arduino.cc/en/Reference/Serial). Serial communication must be initialized by setting the frequency of the communication by using __Serial.begin(_int_ frequency)__. So we will but that line of code in the setup function.
+
+```C++
+	 Serial.begin(9600);
+```
+In the arduino IDE you can open a serial communication by clicking on the magnifying glass icone. You must be connected to the board before doing this.
+
+__TODO tell what is the board's name with a computer that have the USB driver installed and how to connect to it__
+
+To catch the sended values, you may use sevral Serial functions:
+ * __Serial.available()__ return a boolean that told us wether data have been received (true) or not (false).
+ * __Serial.parseInt()__ read the availables data, parse it as an integer if possible and return it or return 0 if the data isn't an integer. With this code we can catch the value and pass it to the function __StepperMove()__ or __StepperMoveTo()__.
+
+```C++
+ long value;
+  if(Serial.available()>1)
+  {
+    value = Serial.parseInt();
+    Serial.print("value : ");
+    Serial.println(value);
+  }
+  StepperMoveTo(value);
+```
+Now our first code version look like this and we can handle a first control of the position:
+
+```C++
+#include "TimerOne.h"
+#include "MeMegaPi.h"
+
+MeStepperOnBoard stepper[2] {{SLOT_1},{SLOT_2}}; 
+
+void StepperMoveTo(int value)
+{
+    stepper[0].moveTo(-value);
+    stepper[1].moveTo(value);   
+}
+void StepperMove(int value)
+{
+    stepper[0].move(-value);
+    stepper[1].move(value);   
+}
+
+void StepperRun()
+{
+    stepper[0].run();
+    stepper[1].run();   
+}
+
+void StepperInit()
+{
+   for(int i =0;i<2;i++)
+    {
+      // Change these to suit your stepper if you want
+      stepper[i].setMaxSpeed(100);
+      stepper[i].setAcceleration(20000);
+      stepper[i].setMicroStep(16);
+      stepper[i].enableOutputs();
+  
+    }
+}
+
+void setup()
+{ 
+	 Serial.begin(9600); 
+	 StepperInit();
+}
+
+void loop()
+{
+  long value;
+  if(Serial.available()>1)
+  {
+    value = Serial.parseInt();
+    StepperMoveTo(value);
+  }
+}
+```
+
+__TODO explain the timerOne use and how it works__
+
+final version:
+```C++
+#include "TimerOne.h"
+#include "MeMegaPi.h"
+
+MeStepperOnBoard stepper[2] {{SLOT_1},{SLOT_2}}; 
+
+void StepperMoveTo(int value)
+{
+    stepper[0].moveTo(-value);
+    stepper[1].moveTo(value);   
+}
+void StepperMove(int value)
+{
+    stepper[0].move(-value);
+    stepper[1].move(value);   
+}
+
+void StepperRun()
+{
+    stepper[0].run();
+    stepper[1].run();   
+}
+
+void StepperInit()
+{
+   for(int i =0;i<2;i++)
+    {
+      // Change these to suit your stepper if you want
+      stepper[i].setMaxSpeed(100);
+      stepper[i].setAcceleration(20000);
+      stepper[i].setMicroStep(16);
+      stepper[i].enableOutputs();
+  
+    }
+  Timer1.initialize(100);
+  Timer1.attachInterrupt(StepperRun);
+}
+
+void setup()
+{ 
+	 Serial.begin(9600); 
+	 StepperInit();
+}
+
+void loop()
+{
+  long value;
+  if(Serial.available()>1)
+  {
+    value = Serial.parseInt();
+    StepperMoveTo(value);
+  }
 }
 ```
