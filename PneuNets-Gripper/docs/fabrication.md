@@ -10,8 +10,8 @@ To make these parts we used Inkscape. The draws are then sent to the laser cutti
 
 Now the drawback of having a laser cutting is that we have much more work to do to assemble all the parts. But after some assembling we finally got the following result which, because of the transparency of the Acrylic looks really cool:
 
-<img src="../images/mold_all.jpeg" align="left" width="200"/>
-<img src="../images/mold4.jpeg" align="middle" width="320" />
+<img src="../images/mold_all.jpeg" align="left" height="200"/>
+<img src="../images/mold4.jpeg" align="middle" height="320" />
 
 ### Silicon casting
 We used xx yy silicon...mixed in ...
