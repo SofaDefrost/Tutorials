@@ -1,4 +1,37 @@
-##### Simulation
+# Simulation
+
+The simulation is done using the SOFA Open Source Framework and the "Soft-Robots" Plugin  dedicated for Real-time simulation of Soft Robots. To define the simulation, a Python scene file is created and fed as input to SOFA. In the following, we will describe, step by step, the creation of scene file that perfrom the simulation of the soft Pneunet gripper. 
+
+## Volumetric Meshing and Loading
+
+To be able to simulate the soft robot, the first step is to discretise the soft robot in space, by creating a volumetric mesh, typically with tetrahedra. This can be done with any meshing tool such as Gmsh or CGAL. In this example, we use Gmsh. This will generate a vtk file containing all the information about postion of the nodes and connectivity between them through the tetrahedra.
+Here is the mesh that was used for each finger of the gripper:
+
+![Real images](../images/PneuNets-gripper_mesh.png)
+
+In a SOFA scene the mesh is loaded using the loader component:
+```python
+finger.createObject('MeshVTKLoader', name='loader', filename=path+'pneunetCutCoarse.vtk')
+```
+
+This mesh is then stored in a TetrahedronTopology component, and a MechanicalObject is component is created to store the degrees of freedom of the robot (which are the positions of all the nodes in the mesh)
+
+```python
+finger.createObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
+finger.createObject('TetrahedronSetTopologyModifier')
+finger.createObject('TetrahedronSetTopologyAlgorithms', template='Vec3d')
+finger.createObject('TetrahedronSetGeometryAlgorithms', template='Vec3d')
+finger.createObject('MechanicalObject', name='tetras', template='Vec3d', rx='0', dz='0')
+```
+
+## Constitutive law of the material and Mass
+
+Next, we need to define what kind of material we are going to simulate, and this is done by adding a ForceField component, which describes what internal forces are created when the object is deformed. In particular, this will how soft or stiff the material is, if it has an elastic or more complex behaviour (Hyperelastic, plastic, etc...). In this example, we use the TetrehedronFEMForceField component with corresponds to an elastic material deformation but with large rotations:
+```python
+                finger1.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusFingers), drawAsEdges="1")
+```
+
+
 
 The simulation is done using Sofa-RT with the following scene: 
 
