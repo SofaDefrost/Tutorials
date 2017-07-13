@@ -2,12 +2,16 @@ Simulating
 =======================
 ### Introduction
 
+The simulation is done using the SOFA Open Source Framework and the "Soft-Robots" Plugin  dedicated for Real-time simulation of Soft Robots. To define the simulation, a Python scene file is created and fed as input to SOFA. In the following, we will describe, step by step, the creation of scene file that perfrom the simulation of the soft W-Gripper. 
+
 #### This Tutorials is composed of: 
 - [Step 1 : Environment](simulationEnvironment.md)
 - [Step 2 : Rollers](simulationRollers.md)
 - [Step 3 : FEM W mesh](simulationFEMWMesh.md)
 - [Step 4 : Attachment](simulationAttachment.md)
 - [Step 5 : Colision](simulationColision.md)
+
+#### Basis of the scene
 
 Let's define the basis of the scene as shown below : 
 
