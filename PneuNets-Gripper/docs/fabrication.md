@@ -42,6 +42,7 @@ The mounting plateform is holding the three PneuNets actuators on a single struc
 ### Pressure system and controller
 
 The pressure system is composed of serhingues actuated by a stepper motor. 
-The stepper motor is controlled using an Arduino. 
+The stepper motor is controlled using an Arduino. The Arduino is connected to a PC using an usb cable and serial emulation. 
+The Arduino board then communicate with the Sofa-PR simulation to get the commands. 
 
 <img src="../images/fab2.jpg" align="left" height="200" /> 
