@@ -80,7 +80,23 @@ cavity.createObject('SurfacePressureConstraint', name="SurfacePressureConstraint
 cavity.createObject('BarycentricMapping', name='mapping')
 ```
 
+To interactively fill the cavity, we use a PythonScriptController, which is a component referring to a python file performing some actions at the initialisation or during the simulation:
+```python
+rootNode.createObject('PythonScriptController', filename="controllerGripper.py", classname="controller")
+```
 
+## Solving the constraints
+
+ To solve the constraints, such as the one define by the pressure actuator, we have to add to the rootNode the component FreeMotionAnimationLoop that will build up the system including contraints. The component GenericConstraintSolver will also be added to solve the constraints. Finally, we add the component LinearConstraintCorrection to the finger Node to take into account the correction due to the cavity constraint to the velocity and position:
+```python
+rootNode.createObject('FreeMotionAnimationLoop')
+rootNode.createObject('GenericConstraintSolver', maxIterations="10000", tolerance="1e-3")
+.
+.
+.
+finger.createObject('LinearSolverConstraintCorrection', solverName='directSolver')
+```
+  
 
 ## Appendix
 
