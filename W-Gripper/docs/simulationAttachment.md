@@ -30,8 +30,8 @@ The following code allows to fill these two lists for the left rollers
             if (y+eps>H) & (x - L/2 < -D/2):
                 
                 l = L/2- D/2  - x; 
-                teta = l / Radius;
-                mapPos = mapPos + [-Radius*sin(teta), Radius*cos(teta), z] #be carreful of possible initial rotation of the rollers
+                theta = l / R;
+                mapPos = mapPos + [-R*sin(teta), R*cos(teta), z] #be carreful of possible initial rotation of the rollers
                 indices = indices + [p];
 ```
 
@@ -45,10 +45,16 @@ Then, we will use these two lists to create:
         cylinderAttachPoints.createObject('RigidMapping')
 ```
 
-* the springs (we use the RestShapeSpringsForceField)
+* the springs (we use the RestShapeSpringsForceField and we inform the component that the "rest position" is provided by the points we just created. Moreover, the list of indices that was computed below is set in the data "points".
 ```python
-        finger.createObject('RestShapeSpringsForceField', points=transformTableInString(indices), stiffness='1000', external_rest_shape='../cylinder/cylinderAttachPoints/attachPointsMO')
+        rubber.createObject('RestShapeSpringsForceField', points=transformTableInString(indices), stiffness='1000', external_rest_shape='../cylinder/cylinderAttachPoints/attachPointsMO')
 ```
+
+#### Advantage
+This method is quite simple to implement and does not create much additional computation costs
+
+#### Drawback
+The drawback of this method, and in particular the "RestShapeSpringsForceField", is the fact that the spring force is only applied to the mesh, and not on the rollers. In fact the roller motion is still computed separately, as if it was a separated mechanical component. It becomes, somehow a "master" and the deformable surface becomes the "slave".
 
 
 
