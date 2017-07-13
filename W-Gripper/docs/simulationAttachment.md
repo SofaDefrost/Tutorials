@@ -53,6 +53,8 @@ Then, we will use these two lists to create:
 
 #### Results
 The result is presented in the video. We observe that the deformable mesh is "attracted" by the springs to the points defined on the rigid rollers.
+
+
 [![VIDEO](https://img.youtube.com/vi/z4GOrovo6pE/0.jpg)](https://www.youtube.com/watch?v=z4GOrovo6pE)
 
 #### Advantage
