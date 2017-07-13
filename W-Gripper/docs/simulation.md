@@ -9,7 +9,7 @@ The simulation is done using the SOFA Open Source Framework and the "Soft-Robots
 - [Step 2 : Rollers](simulationRollers.md)
 - [Step 3 : FEM W mesh](simulationFEMWMesh.md)
 - [Step 4 : Attachment](simulationAttachment.md)
-- [Step 5 : Colision](simulationColision.md)
+- [Step 5 : Collision](simulationCollision.md)
 
 #### Basis of the scene
 
