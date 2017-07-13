@@ -19,12 +19,12 @@ Let's create our floor function:
         floorNode.createObject('OglModel',name="Visual", fileMesh="mesh/floorFlat.obj", color="1 0 0 1",rotation="0 0 270", scale =5, translation="30 0 0") ## The visual part using the floorFlat.obj available by default in sofa/share/mesh
         return floorNode
 ```
-
-And add it to the createScene function : 
+The floor will be collision responsive using triangle/line/points object. We simply create a mechanical object then attach a mesh on it. Now we have to create the floor by calling the function from the createScene function.
 
 ```python
         floorNode = createFloor(rootNode)
 ```
+
 Then the grasped object. This one will be more complicated because it will interract with the rubber band. 
 ```python
 ################################ Grasped Object ###################################
