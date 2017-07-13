@@ -18,14 +18,14 @@ translateFinger3 = "0 " + str(radius + radius*math.sin(angle2-math.pi/2)) + " " 
 def createScene(rootNode):
 
                 rootNode.createObject('RequiredPlugin', pluginName='SoftRobots')
-                rootNode.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels showCollisionModels hideBoundingCollisionModels showForceFields showInteractionForceFields hideWireframe')
+                rootNode.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels hideCollisionModels hideBoundingCollisionModels hideForceFields showInteractionForceFields hideWireframe')
                 rootNode.findData('gravity').value='-9810 0 0';
                 rootNode.createObject('FreeMotionAnimationLoop')
                 rootNode.createObject('GenericConstraintSolver', maxIterations="1000", tolerance="1e-6")
                 rootNode.createObject('CollisionPipeline', verbose="0")
                 rootNode.createObject('BruteForceDetection', name="N2")
                 rootNode.createObject('CollisionResponse', response="FrictionContact", responseParams="mu=0.8")
-                rootNode.createObject('LocalMinDistance', name="Proximity", alarmDistance="4", contactDistance="1", angleCone="0.01")
+                rootNode.createObject('LocalMinDistance', name="Proximity", alarmDistance="5", contactDistance="2", angleCone="0.01")
 
 		rootNode.createObject('BackgroundSetting', color='0 0.168627 0.211765')
                 rootNode.createObject('OglSceneFrame', style="Arrows", alignment="TopRight")
@@ -42,11 +42,9 @@ def createScene(rootNode):
 
                 cube = rootNode.createChild('cube')
                 cube.createObject('EulerImplicit', name='odesolver')
-                #cube.createObject('CGLinearSolver', name='linearSolver')
                 cube.createObject('SparseLDLSolver', name='linearSolver')
                 cube.createObject('MechanicalObject', template="Rigid", scale="4", position='-23 16 0 0 0 0 1')#, dx="47.0", dy="10", dz="8", rx="10" ,ry="10")
-                #cube.createObject('UniformMass', mass= '0.01 10 1000 0 0 0 1000 0 0 0 1000')
-                cube.createObject('UniformMass', totalmass= '0.001')
+                cube.createObject('UniformMass', totalmass= '0.0008')
                 cube.createObject('UncoupledConstraintCorrection')
                 
                 #collision
@@ -73,7 +71,6 @@ def createScene(rootNode):
                 finger1.createObject('EulerImplicit', name='odesolver')
                 finger1.createObject('SparseLDLSolver', name='preconditioner')
                 
-                #finger1.createObject('MeshVTKLoader', name='loader', filename=path+'PneuNets.vtk')
                 finger1.createObject('MeshVTKLoader', name='loader', filename=path+'pneunetCutCoarse.vtk',translation = translateFinger1)
                 finger1.createObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
                 finger1.createObject('TetrahedronSetTopologyModifier')
@@ -84,7 +81,7 @@ def createScene(rootNode):
                 finger1.createObject('UniformMass', totalmass=str(fingersMass))
                 finger1.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusFingers), drawAsEdges="1")
 		  
-                finger1.createObject('BoxROI', name='boxROI', box='-10 0 -20 0 30 20', drawBoxes='true')
+                finger1.createObject('BoxROI', name='boxROI', box='-10 0 -20 0 30 20', drawBoxes='true',doUpdate='0')
 		finger1.createObject('BoxROI', name='boxROISubTopo', box='-100 22.5 -8 -19 28 8', drawBoxes='false')
                 finger1.createObject('RestShapeSpringsForceField', points='@boxROI.indices', stiffness='1e12', angularStiffness='1e12')
                 
@@ -102,12 +99,10 @@ def createScene(rootNode):
                 # Constraint                             #
                 ##########################################
                 cavity = finger1.createChild('cavity')
-#                cavity.createObject('MeshSTLLoader', name='loader', filename=path+'PneuNets_Cavity.stl')
                 cavity.createObject('MeshSTLLoader', name='loader', filename=path+'pneunetCavityCut.stl',translation = translateFinger1)
                 cavity.createObject('Mesh', src='@loader', name='topo')
                 cavity.createObject('MechanicalObject', name='cavity')
                 cavity.createObject('SurfacePressureConstraint', name="SurfacePressureConstraint", template='Vec3d', value="0.0001", triangles='@topo.triangles', visualization='0', showVisuScale='0.0002', valueType="pressure")
-      #          cavity.createObject('PythonScriptController', filename="PneuNetsController.py", classname="controller")
                 cavity.createObject('BarycentricMapping', name='mapping',  mapForces='false', mapMasses='false')                
                 
                 ##########################################
@@ -128,7 +123,6 @@ def createScene(rootNode):
                 # Visualization                          #
                 ##########################################
                 modelVisu = finger1.createChild('visu')                
-                #modelVisu.createObject('OglModel', filename=path+"PneuNets.stl", template='ExtVec3f', color='0.7 0.7 0.7 0.6')
                 modelVisu.createObject('OglModel', filename=path+"pneunetCut.stl", template='ExtVec3f', color='0.7 0.7 0.7 0.6',translation = translateFinger1)
                 modelVisu.createObject('BarycentricMapping')
 
@@ -139,7 +133,6 @@ def createScene(rootNode):
                 finger2.createObject('EulerImplicit', name='odesolver')
                 finger2.createObject('SparseLDLSolver', name='preconditioner')
                 
-                #finger2.createObject('MeshVTKLoader', name='loader', filename=path+'PneuNets.vtk')
                 finger2.createObject('MeshVTKLoader', name='loader', filename=path+'pneunetCutCoarse.vtk',rotation=str(360 - angle1*180/math.pi)+ " 0 0", translation=translateFinger2)
                 finger2.createObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
                 finger2.createObject('TetrahedronSetTopologyModifier')
@@ -165,12 +158,10 @@ def createScene(rootNode):
                 # Constraint                             #
                 ##########################################
                 cavity = finger2.createChild('cavity')
-#                cavity.createObject('MeshSTLLoader', name='loader', filename=path+'PneuNets_Cavity.stl')
                 cavity.createObject('MeshSTLLoader', name='loader', filename=path+'pneunetCavityCut.stl',rotation=str(360 - angle1*180/math.pi)+ " 0 0" , translation=translateFinger2)
                 cavity.createObject('Mesh', src='@loader', name='topo')
                 cavity.createObject('MechanicalObject', name='cavity')
                 cavity.createObject('SurfacePressureConstraint', name="SurfacePressureConstraint", template='Vec3d', value="0.0001", triangles='@topo.triangles', visualization='0', showVisuScale='0.0002', valueType="pressure")
-      #          cavity.createObject('PythonScriptController', filename="PneuNetsController.py", classname="controller")
                 cavity.createObject('BarycentricMapping', name='mapping',  mapForces='false', mapMasses='false')                
                 
                 ##########################################
@@ -191,7 +182,6 @@ def createScene(rootNode):
                 # Visualization                          #
                 ##########################################
                 modelVisu = finger2.createChild('visu')                
-                #modelVisu.createObject('OglModel', filename=path+"PneuNets.stl", template='ExtVec3f', color='0.7 0.7 0.7 0.6')
                 modelVisu.createObject('OglModel', filename=path+"pneunetCut.stl", template='ExtVec3f', color='0.7 0.7 0.7 0.6',rotation=str(360 - angle1*180/math.pi)+ " 0 0", translation=translateFinger2)
                 modelVisu.createObject('BarycentricMapping')
 
@@ -202,7 +192,6 @@ def createScene(rootNode):
                 finger3.createObject('EulerImplicit', name='odesolver')
                 finger3.createObject('SparseLDLSolver', name='preconditioner')
                 
-                #finger3.createObject('MeshVTKLoader', name='loader', filename=path+'PneuNets.vtk')
                 finger3.createObject('MeshVTKLoader', name='loader', filename=path+'pneunetCutCoarse.vtk',rotation=str(360 - angle2*180/math.pi)+ " 0 0", translation=translateFinger3)
                 finger3.createObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
                 finger3.createObject('TetrahedronSetTopologyModifier')
@@ -228,12 +217,10 @@ def createScene(rootNode):
                 # Constraint                             #
                 ##########################################
                 cavity = finger3.createChild('cavity')
-#                cavity.createObject('MeshSTLLoader', name='loader', filename=path+'PneuNets_Cavity.stl')
                 cavity.createObject('MeshSTLLoader', name='loader', filename=path+'pneunetCavityCut.stl',rotation=str(360 - angle2*180/math.pi)+ " 0 0", translation=translateFinger3)
                 cavity.createObject('Mesh', src='@loader', name='topo')
                 cavity.createObject('MechanicalObject', name='cavity')
                 cavity.createObject('SurfacePressureConstraint', name="SurfacePressureConstraint", template='Vec3d', value="0.0001", triangles='@topo.triangles', visualization='0', showVisuScale='0.0002', valueType="pressure")
-  #              cavity.createObject('PythonScriptController', filename="PneuNetsController.py", classname="controller")
                 cavity.createObject('BarycentricMapping', name='mapping',  mapForces='false', mapMasses='false')                
 
                 ##########################################
@@ -254,7 +241,6 @@ def createScene(rootNode):
                 # Visualization                          #
                 ##########################################
                 modelVisu = finger3.createChild('visu')                
-                #modelVisu.createObject('OglModel', filename=path+"PneuNets.stl", template='ExtVec3f', color='0.7 0.7 0.7 0.6')
                 modelVisu.createObject('OglModel', filename=path+"pneunetCut.stl", template='ExtVec3f', color='0.7 0.7 0.7 0.6',rotation=str(360 - angle2*180/math.pi)+ " 0 0", translation=translateFinger3)
                 modelVisu.createObject('BarycentricMapping')
 

@@ -1,0 +1,17 @@
+
+--- NEW SESSION: 12/07/2017 17:24:31 ---
+/finger2/RestShapeSpringsForceField.springColor = 0 1 0 1
+/finger2/RestShapeSpringsForceField.drawSpring = 1
+/finger3/RestShapeSpringsForceField.springColor = 0 1 0 1
+/finger3/RestShapeSpringsForceField.drawSpring = 1
+/finger1/RestShapeSpringsForceField.springColor = 0 1 0 1
+/finger1/RestShapeSpringsForceField.drawSpring = 1
+
+--- NEW SESSION: 12/07/2017 17:32:31 ---
+/finger1/RestShapeSpringsForceField.springColor = 0 1 0 1
+/finger1/RestShapeSpringsForceField.drawSpring = 1
+/finger2/RestShapeSpringsForceField.springColor = 0 1 0 1
+/finger2/RestShapeSpringsForceField.drawSpring = 1
+/finger3/RestShapeSpringsForceField.springColor = 0 1 0 1
+/finger3/RestShapeSpringsForceField.drawSpring = 1
+/finger1/boxROI.doUpdate = 0

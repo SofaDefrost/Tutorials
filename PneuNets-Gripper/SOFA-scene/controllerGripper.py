@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import Sofa
-import Sofa
+import math
 
 
 def moveRestPos(rest_pos, dx, dy, dz):
@@ -12,6 +12,15 @@ def moveRestPos(rest_pos, dx, dy, dz):
         str_out= str_out + ' ' + str(rest_pos[i][2]+dz)
     return str_out
 
+def rotateRestPos(rest_pos,rx,centerPosY,centerPosZ):
+    str_out = ' '
+    for i in xrange(0,len(rest_pos)) :
+        newRestPosY = (rest_pos[i][1] - centerPosY)*math.cos(rx) - (rest_pos[i][2] - centerPosZ)*math.sin(rx) +  centerPosY
+        newRestPosZ = (rest_pos[i][1] - centerPosY)*math.sin(rx) + (rest_pos[i][2] - centerPosZ)*math.cos(rx) +  centerPosZ
+        str_out= str_out + ' ' + str(rest_pos[i][0])
+        str_out= str_out + ' ' + str(newRestPosY)
+        str_out= str_out + ' ' + str(newRestPosZ)
+    return str_out
 
 class controller(Sofa.PythonScriptController):
     
@@ -28,14 +37,16 @@ class controller(Sofa.PythonScriptController):
             self.pressureConstraint1Node = self.finger1Node.getChild('cavity')
             self.pressureConstraint2Node = self.finger2Node.getChild('cavity')
             self.pressureConstraint3Node = self.finger3Node.getChild('cavity')
-
+            
+            self.centerPosY = 70
+            self.centerPosZ = 0
+            self.rotAngle = 0
             
     def onKeyPressed(self,c):
-        
+            print ord(c)
             self.dt = self.node.findData('dt').value
             incr = self.dt*1000.0;
             
-            print 'Key Pressed is: ', c
             self.MecaObject1=self.finger1Node.getObject('tetras');
             self.MecaObject2=self.finger2Node.getObject('tetras');
             self.MecaObject3=self.finger3Node.getObject('tetras');
@@ -47,10 +58,16 @@ class controller(Sofa.PythonScriptController):
             if (c == "+"):
                 print 'squeezing...'
                 pressureValue = self.pressureConstraint1.findData('value').value[0][0] + 0.01
+                if pressureValue > 1.5:
+                    pressureValue = 1.5
                 self.pressureConstraint1.findData('value').value = str(pressureValue)
                 pressureValue = self.pressureConstraint2.findData('value').value[0][0] + 0.01
+                if pressureValue > 1.5:
+                    pressureValue = 1.5
                 self.pressureConstraint2.findData('value').value = str(pressureValue)
                 pressureValue = self.pressureConstraint3.findData('value').value[0][0] + 0.01
+                if pressureValue > 1.5:
+                    pressureValue = 1.5
                 self.pressureConstraint3.findData('value').value = str(pressureValue)
 
             if (c == "-"):
@@ -85,23 +102,46 @@ class controller(Sofa.PythonScriptController):
 
             # LEFT key : left
             if ord(c)==20:
-                test = moveRestPos(self.MecaObject1.rest_position, 0.0, 3.0, 0.0)
+                dy = 3.0*math.cos(self.rotAngle)
+                dz = 3.0*math.sin(self.rotAngle)
+                test = moveRestPos(self.MecaObject1.rest_position, 0.0, dy, dz)
                 self.MecaObject1.findData('rest_position').value = test
-                test = moveRestPos(self.MecaObject2.rest_position, 0.0, 3.0, 0.0)
+                test = moveRestPos(self.MecaObject2.rest_position, 0.0, dy, dz)
                 self.MecaObject2.findData('rest_position').value = test
-                test = moveRestPos(self.MecaObject3.rest_position, 0.0, 3.0, 0.0)
+                test = moveRestPos(self.MecaObject3.rest_position, 0.0, dy, dz)
                 self.MecaObject3.findData('rest_position').value = test
-                        
-            
+                self.centerPosY = self.centerPosY + dy        
+                self.centerPosZ = self.centerPosZ + dz
+                
             # RIGHT key : right
             if ord(c)==18:
-                test = moveRestPos(self.MecaObject1.rest_position, 0.0, -3.0, 0.0)
+                dy = -3.0*math.cos(self.rotAngle)
+                dz = -3.0*math.sin(self.rotAngle)
+                test = moveRestPos(self.MecaObject1.rest_position, 0.0, dy, dz)
                 self.MecaObject1.findData('rest_position').value = test
-                test = moveRestPos(self.MecaObject2.rest_position, 0.0, -3.0, 0.0)
+                test = moveRestPos(self.MecaObject2.rest_position, 0.0, dy, dz)
                 self.MecaObject2.findData('rest_position').value = test
-                test = moveRestPos(self.MecaObject3.rest_position, 0.0, -3.0, 0.0)
+                test = moveRestPos(self.MecaObject3.rest_position, 0.0, dy, dz)
                 self.MecaObject3.findData('rest_position').value = test
+                self.centerPosY = self.centerPosY + dy        
+                self.centerPosZ = self.centerPosZ + dz
 
-
+            # a key : direct rotation
+            if (ord(c) == 65):
+                test = rotateRestPos(self.MecaObject1.rest_position, math.pi/16, self.centerPosY,self.centerPosZ)
+                self.MecaObject1.findData('rest_position').value = test
+                test = rotateRestPos(self.MecaObject2.rest_position, math.pi/16, self.centerPosY,self.centerPosZ)
+                self.MecaObject2.findData('rest_position').value = test
+                test = rotateRestPos(self.MecaObject3.rest_position, math.pi/16,self.centerPosY,self.centerPosZ)
+                self.MecaObject3.findData('rest_position').value = test
+                self.rotAngle = self.rotAngle + math.pi/16
             
-
+            # q key : indirect rotation
+            if (ord(c) == 81):
+                test = rotateRestPos(self.MecaObject1.rest_position, -math.pi/16, self.centerPosY,self.centerPosZ)
+                self.MecaObject1.findData('rest_position').value = test
+                test = rotateRestPos(self.MecaObject2.rest_position, -math.pi/16, self.centerPosY,self.centerPosZ)
+                self.MecaObject2.findData('rest_position').value = test
+                test = rotateRestPos(self.MecaObject3.rest_position, -math.pi/16, self.centerPosY,self.centerPosZ)
+                self.MecaObject3.findData('rest_position').value = test
+                self.rotAngle = self.rotAngle - math.pi/16
