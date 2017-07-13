@@ -21,11 +21,11 @@ def createScene(rootNode):
                 rootNode.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels hideCollisionModels hideBoundingCollisionModels hideForceFields showInteractionForceFields hideWireframe')
                 rootNode.findData('gravity').value='-9810 0 0';
                 rootNode.createObject('FreeMotionAnimationLoop')
-                rootNode.createObject('GenericConstraintSolver', maxIterations="1000", tolerance="1e-6")
+                rootNode.createObject('GenericConstraintSolver', maxIterations="10000", tolerance="1e-3")
                 rootNode.createObject('CollisionPipeline', verbose="0")
                 rootNode.createObject('BruteForceDetection', name="N2")
-                rootNode.createObject('CollisionResponse', response="FrictionContact", responseParams="mu=0.8")
-                rootNode.createObject('LocalMinDistance', name="Proximity", alarmDistance="5", contactDistance="2", angleCone="0.01")
+                rootNode.createObject('CollisionResponse', response="FrictionContact", responseParams="mu=0.6")
+                rootNode.createObject('LocalMinDistance', name="Proximity", alarmDistance="5", contactDistance="1", angleCone="0.01")
 
 		rootNode.createObject('BackgroundSetting', color='0 0.168627 0.211765')
                 rootNode.createObject('OglSceneFrame', style="Arrows", alignment="TopRight")
@@ -44,7 +44,7 @@ def createScene(rootNode):
                 cube.createObject('EulerImplicit', name='odesolver')
                 cube.createObject('SparseLDLSolver', name='linearSolver')
                 cube.createObject('MechanicalObject', template="Rigid", scale="4", position='-23 16 0 0 0 0 1')#, dx="47.0", dy="10", dz="8", rx="10" ,ry="10")
-                cube.createObject('UniformMass', totalmass= '0.0008')
+                cube.createObject('UniformMass', mass='0.0008  74088  0.2352 0 0  0 0.2352 0  0 0 0.2352')
                 cube.createObject('UncoupledConstraintCorrection')
                 
                 #collision
@@ -82,6 +82,7 @@ def createScene(rootNode):
                 finger1.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusFingers), drawAsEdges="1")
 		  
                 finger1.createObject('BoxROI', name='boxROI', box='-10 0 -20 0 30 20', drawBoxes='true',doUpdate='0')
+                #finger1.createObject('BoxROI', name='boxROI', box='-50 0 -20 0 30 20', drawBoxes='true',doUpdate='0')
 		finger1.createObject('BoxROI', name='boxROISubTopo', box='-100 22.5 -8 -19 28 8', drawBoxes='false')
                 finger1.createObject('RestShapeSpringsForceField', points='@boxROI.indices', stiffness='1e12', angularStiffness='1e12')
                 

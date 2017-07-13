@@ -18,3 +18,14 @@
 
 --- NEW SESSION: 13/07/2017 11:41:09 ---
 /finger1/FEM.drawAsEdges = 0
+
+--- NEW SESSION: 13/07/2017 15:44:20 ---
+/finger1/boxROI.drawPoints = 1
+/finger1/boxROI.drawEdges = 1
+/Proximity.coneFactor = 0.7
+
+--- NEW SESSION: 13/07/2017 16:31:52 ---
+/GenericConstraintSolver.maxIterations = 5000
+/GenericConstraintSolver.maxIterations = 100000
+/GenericConstraintSolver.currentIterations = 100001
+/GenericConstraintSolver.currentError = 0.0150297

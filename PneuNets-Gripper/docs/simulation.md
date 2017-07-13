@@ -41,8 +41,8 @@ finger.createObject('UniformMass', totalmass='0.0008')
 To define the constitutive law of the stiff layer, we will create a new node and define a new ForceField with stiffer parameters only on the points which constitute the layer. To easily define the indices of the points which will be selected, we use the boxROI components wich allows to define a box that will contain all the points of the layer.
 
 ```python
-finger1.createObject('BoxROI', name='boxROISubTopo', box='-100 22.5 -8 -19 28 8')
-modelSubTopo = finger1.createChild('modelSubTopo')
+finger.createObject('BoxROI', name='boxROISubTopo', box='-100 22.5 -8 -19 28 8')
+modelSubTopo = finger.createChild('modelSubTopo')
 modelSubTopo.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo.tetrahedraInROI", name='container')
 modelSubTopo.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus='1500')
 ```
@@ -65,10 +65,26 @@ Now that all the minimal elements of the scene have been described, it is alread
 finger.createObject('EulerImplicit', name='odesolver')
 finger.createObject('SparseLDLSolver', name='directSolver')
 ```
+With the scene in this state, not much will happen in the simulation, merely a small deformation due to gravity on the finger. Indeed, we did not include the pneumatic actuator yet.
+
+## Pneumatic Actuator and Python script controller
+
+In this section, we will introduce a pneumatic actuator that will allow to interactively simulate the filling of the finger's cavity with air. To do that, we first create a node that will take care of this task. Then, the surface mesh of the cavity has to be loaded using a mesh loader and the position are stored in a Mesh component which is a container. A MechanicalObject is created to store the degrees of freedom of the cavity which will be deforming during the simulation. The actuator in itself is created with the component SurfacePressureConstraint which is directly associated to the mesh container through the attribute "triangles". The actuation can be defined either by pressure or volume growth. Finally, a BarycentricMapping component is created to map the deformation of the cavity mesh to the mesh of the finger:
+
+```python
+cavity = finger.createChild('cavity')
+cavity.createObject('MeshSTLLoader', name='loader', filename=path+'pneunetCavityCut.stl')
+cavity.createObject('Mesh', src='@loader', name='cavityMesh')
+cavity.createObject('MechanicalObject', name='cavity')
+cavity.createObject('SurfacePressureConstraint', name="SurfacePressureConstraint", template='Vec3d', value="0.0001", triangles='@topo.triangles', valueType="pressure")
+cavity.createObject('BarycentricMapping', name='mapping')
+```
 
 
-The simulation is done using Sofa-RT with the following scene: 
 
+## Appendix
+
+Here is the global SOFA scene simulation of the soft pneunet Gripper
 ```python
 import Sofa
 import math
@@ -90,14 +106,14 @@ translateFinger3 = "0 " + str(radius + radius*math.sin(angle2-math.pi/2)) + " " 
 def createScene(rootNode):
 
                 rootNode.createObject('RequiredPlugin', pluginName='SoftRobots')
-                rootNode.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels showCollisionModels hideBoundingCollisionModels showForceFields showInteractionForceFields hideWireframe')
+                rootNode.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels hideCollisionModels hideBoundingCollisionModels hideForceFields showInteractionForceFields hideWireframe')
                 rootNode.findData('gravity').value='-9810 0 0';
                 rootNode.createObject('FreeMotionAnimationLoop')
-                rootNode.createObject('GenericConstraintSolver', maxIterations="1000", tolerance="1e-6")
+                rootNode.createObject('GenericConstraintSolver', maxIterations="10000", tolerance="1e-3")
                 rootNode.createObject('CollisionPipeline', verbose="0")
                 rootNode.createObject('BruteForceDetection', name="N2")
-                rootNode.createObject('CollisionResponse', response="FrictionContact", responseParams="mu=0.8")
-                rootNode.createObject('LocalMinDistance', name="Proximity", alarmDistance="4", contactDistance="1", angleCone="0.01")
+                rootNode.createObject('CollisionResponse', response="FrictionContact", responseParams="mu=0.6")
+                rootNode.createObject('LocalMinDistance', name="Proximity", alarmDistance="5", contactDistance="1", angleCone="0.01")
 
 		rootNode.createObject('BackgroundSetting', color='0 0.168627 0.211765')
                 rootNode.createObject('OglSceneFrame', style="Arrows", alignment="TopRight")
@@ -114,11 +130,9 @@ def createScene(rootNode):
 
                 cube = rootNode.createChild('cube')
                 cube.createObject('EulerImplicit', name='odesolver')
-                #cube.createObject('CGLinearSolver', name='linearSolver')
                 cube.createObject('SparseLDLSolver', name='linearSolver')
                 cube.createObject('MechanicalObject', template="Rigid", scale="4", position='-23 16 0 0 0 0 1')#, dx="47.0", dy="10", dz="8", rx="10" ,ry="10")
-                #cube.createObject('UniformMass', mass= '0.01 10 1000 0 0 0 1000 0 0 0 1000')
-                cube.createObject('UniformMass', totalmass= '0.001')
+                cube.createObject('UniformMass', mass='0.0008  74088  0.2352 0 0  0 0.2352 0  0 0 0.2352')
                 cube.createObject('UncoupledConstraintCorrection')
                 
                 #collision
@@ -145,7 +159,6 @@ def createScene(rootNode):
                 finger1.createObject('EulerImplicit', name='odesolver')
                 finger1.createObject('SparseLDLSolver', name='preconditioner')
                 
-                #finger1.createObject('MeshVTKLoader', name='loader', filename=path+'PneuNets.vtk')
                 finger1.createObject('MeshVTKLoader', name='loader', filename=path+'pneunetCutCoarse.vtk',translation = translateFinger1)
                 finger1.createObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
                 finger1.createObject('TetrahedronSetTopologyModifier')
@@ -156,7 +169,8 @@ def createScene(rootNode):
                 finger1.createObject('UniformMass', totalmass=str(fingersMass))
                 finger1.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusFingers), drawAsEdges="1")
 		  
-                finger1.createObject('BoxROI', name='boxROI', box='-10 0 -20 0 30 20', drawBoxes='true')
+                finger1.createObject('BoxROI', name='boxROI', box='-10 0 -20 0 30 20', drawBoxes='true',doUpdate='0')
+                #finger1.createObject('BoxROI', name='boxROI', box='-50 0 -20 0 30 20', drawBoxes='true',doUpdate='0')
 		finger1.createObject('BoxROI', name='boxROISubTopo', box='-100 22.5 -8 -19 28 8', drawBoxes='false')
                 finger1.createObject('RestShapeSpringsForceField', points='@boxROI.indices', stiffness='1e12', angularStiffness='1e12')
                 
@@ -174,12 +188,10 @@ def createScene(rootNode):
                 # Constraint                             #
                 ##########################################
                 cavity = finger1.createChild('cavity')
-#                cavity.createObject('MeshSTLLoader', name='loader', filename=path+'PneuNets_Cavity.stl')
                 cavity.createObject('MeshSTLLoader', name='loader', filename=path+'pneunetCavityCut.stl',translation = translateFinger1)
                 cavity.createObject('Mesh', src='@loader', name='topo')
                 cavity.createObject('MechanicalObject', name='cavity')
                 cavity.createObject('SurfacePressureConstraint', name="SurfacePressureConstraint", template='Vec3d', value="0.0001", triangles='@topo.triangles', visualization='0', showVisuScale='0.0002', valueType="pressure")
-      #          cavity.createObject('PythonScriptController', filename="PneuNetsController.py", classname="controller")
                 cavity.createObject('BarycentricMapping', name='mapping',  mapForces='false', mapMasses='false')                
                 
                 ##########################################
@@ -200,7 +212,6 @@ def createScene(rootNode):
                 # Visualization                          #
                 ##########################################
                 modelVisu = finger1.createChild('visu')                
-                #modelVisu.createObject('OglModel', filename=path+"PneuNets.stl", template='ExtVec3f', color='0.7 0.7 0.7 0.6')
                 modelVisu.createObject('OglModel', filename=path+"pneunetCut.stl", template='ExtVec3f', color='0.7 0.7 0.7 0.6',translation = translateFinger1)
                 modelVisu.createObject('BarycentricMapping')
 
@@ -211,7 +222,6 @@ def createScene(rootNode):
                 finger2.createObject('EulerImplicit', name='odesolver')
                 finger2.createObject('SparseLDLSolver', name='preconditioner')
                 
-                #finger2.createObject('MeshVTKLoader', name='loader', filename=path+'PneuNets.vtk')
                 finger2.createObject('MeshVTKLoader', name='loader', filename=path+'pneunetCutCoarse.vtk',rotation=str(360 - angle1*180/math.pi)+ " 0 0", translation=translateFinger2)
                 finger2.createObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
                 finger2.createObject('TetrahedronSetTopologyModifier')
@@ -237,12 +247,10 @@ def createScene(rootNode):
                 # Constraint                             #
                 ##########################################
                 cavity = finger2.createChild('cavity')
-#                cavity.createObject('MeshSTLLoader', name='loader', filename=path+'PneuNets_Cavity.stl')
                 cavity.createObject('MeshSTLLoader', name='loader', filename=path+'pneunetCavityCut.stl',rotation=str(360 - angle1*180/math.pi)+ " 0 0" , translation=translateFinger2)
                 cavity.createObject('Mesh', src='@loader', name='topo')
                 cavity.createObject('MechanicalObject', name='cavity')
                 cavity.createObject('SurfacePressureConstraint', name="SurfacePressureConstraint", template='Vec3d', value="0.0001", triangles='@topo.triangles', visualization='0', showVisuScale='0.0002', valueType="pressure")
-      #          cavity.createObject('PythonScriptController', filename="PneuNetsController.py", classname="controller")
                 cavity.createObject('BarycentricMapping', name='mapping',  mapForces='false', mapMasses='false')                
                 
                 ##########################################
@@ -263,7 +271,6 @@ def createScene(rootNode):
                 # Visualization                          #
                 ##########################################
                 modelVisu = finger2.createChild('visu')                
-                #modelVisu.createObject('OglModel', filename=path+"PneuNets.stl", template='ExtVec3f', color='0.7 0.7 0.7 0.6')
                 modelVisu.createObject('OglModel', filename=path+"pneunetCut.stl", template='ExtVec3f', color='0.7 0.7 0.7 0.6',rotation=str(360 - angle1*180/math.pi)+ " 0 0", translation=translateFinger2)
                 modelVisu.createObject('BarycentricMapping')
 
@@ -274,7 +281,6 @@ def createScene(rootNode):
                 finger3.createObject('EulerImplicit', name='odesolver')
                 finger3.createObject('SparseLDLSolver', name='preconditioner')
                 
-                #finger3.createObject('MeshVTKLoader', name='loader', filename=path+'PneuNets.vtk')
                 finger3.createObject('MeshVTKLoader', name='loader', filename=path+'pneunetCutCoarse.vtk',rotation=str(360 - angle2*180/math.pi)+ " 0 0", translation=translateFinger3)
                 finger3.createObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
                 finger3.createObject('TetrahedronSetTopologyModifier')
@@ -300,12 +306,10 @@ def createScene(rootNode):
                 # Constraint                             #
                 ##########################################
                 cavity = finger3.createChild('cavity')
-#                cavity.createObject('MeshSTLLoader', name='loader', filename=path+'PneuNets_Cavity.stl')
                 cavity.createObject('MeshSTLLoader', name='loader', filename=path+'pneunetCavityCut.stl',rotation=str(360 - angle2*180/math.pi)+ " 0 0", translation=translateFinger3)
                 cavity.createObject('Mesh', src='@loader', name='topo')
                 cavity.createObject('MechanicalObject', name='cavity')
                 cavity.createObject('SurfacePressureConstraint', name="SurfacePressureConstraint", template='Vec3d', value="0.0001", triangles='@topo.triangles', visualization='0', showVisuScale='0.0002', valueType="pressure")
-  #              cavity.createObject('PythonScriptController', filename="PneuNetsController.py", classname="controller")
                 cavity.createObject('BarycentricMapping', name='mapping',  mapForces='false', mapMasses='false')                
 
                 ##########################################
@@ -326,10 +330,8 @@ def createScene(rootNode):
                 # Visualization                          #
                 ##########################################
                 modelVisu = finger3.createChild('visu')                
-                #modelVisu.createObject('OglModel', filename=path+"PneuNets.stl", template='ExtVec3f', color='0.7 0.7 0.7 0.6')
                 modelVisu.createObject('OglModel', filename=path+"pneunetCut.stl", template='ExtVec3f', color='0.7 0.7 0.7 0.6',rotation=str(360 - angle2*180/math.pi)+ " 0 0", translation=translateFinger3)
                 modelVisu.createObject('BarycentricMapping')
 
                 return rootNode
-
 ```
