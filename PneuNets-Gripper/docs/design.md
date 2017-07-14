@@ -19,7 +19,48 @@ Very detailled description of the PneuNets actuators can be found at the Soft ro
 <br/><br/><br/><br/><br/><br/><br/><br/>
 We provide the FreeCAD project "pneunet.fcstd" in the directory [PneuNets-Gripper/modeling](https://github.com/SofaDefrost/Tutorials/tree/master/PneuNets-Gripper/modeling).
 
-##### 2 Gripper Mounting Platform
+##### Mounting Mechanism
 TODO: describe a bit the design and add images
+
+For achieving the function of the three Pneuts, we have to look for robust mounting platform that makes sure the air flows to three pneuts besides holding them.
+
+The Mounting Mechanism of the Pneuts consists of five layer
+
+The first layer
+<img src="../images/firstlayer.png" align="left" width="250"/>
+
+The second layer
+
+
+The Third Layer
+
+
+The Fourth Layer
+
+The Fifth Layer
+
+
+
+The Airflow
+
+we are going to use the tradition technique
+
+pneumatic connector photo
+
+
+chamber
+
+
+
+The final prototype
+
+
+
+For using laser cutting machines
+
+
+The files for direct printing
+
+
 
 
