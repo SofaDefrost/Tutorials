@@ -36,13 +36,12 @@ The next part of mounting mechanism is air distribution, you can see in the foll
 <img src="../images/thirdlayer.png" align="left" width="250"/>
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
-#######
+
 The other solution for providing the pressurized air is using pneumatic connector, but it also has the bending problem of tubes, but it is a good technique to prevent air leakage. In the following experiment, we are going to fix directly PneuNet. The figure below shows the pneumatic connection.
 
-<img src="../images/pneumatic connector.jpg" align="left" width="200"/>
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
-######
+
 In the following respiratory,  the FreeCAD project is provided "Layers_Design.fcstd" in the directory [PneuNets-Gripper/images](https://github.com/SofaDefrost/Tutorials/tree/master/PneuNets-Gripper/images).
 
 
