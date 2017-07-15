@@ -26,14 +26,15 @@ The figures belows shows the holding mechanism, the fourth layer has dimensions 
 <img src="../images/fourthlayer.png" align="left" width="250"/>
 <img src="../images/fifthlayer.png" align="left" width="250"/>
 
-<br/><br/><br/><br/><br/><br/><br/><br/>
+
+
 The next part of mounting mechanism is air distribution, you can see in the following page of fabrication the technique used for pressuring air. In this part, we provide two solution, the first one is designing vacuum chamber that has three branches feeds the PneuNet inlet; this design could has a problem of air leakage although using silicon surround its edges. The figures below shows the design of vacuum chamber.
 
 <img src="../images/firstlayer1.png" align="left" width="250"/>
 <img src="../images/SecondLayer.png" align="left" width="250"/>
 <img src="../images/thirdlayer.png" align="left" width="250"/>
 
-<br/><br/><br/><br/><br/><br/><br/><br/>
+
 The other solution for providing the pressurized air is using pneumatic connector, but it also has the bending problem of tubes, but it is a good technique to prevent air leakage. In the following experiment, we are going to fix directly PneuNet. The figure below shows the pneumatic connection. In the following respiratory,  the FreeCAD project is provided "Layers_Design.fcstd" in the directory [PneuNets-Gripper/images](https://github.com/SofaDefrost/Tutorials/tree/master/PneuNets-Gripper/images).
 
 
