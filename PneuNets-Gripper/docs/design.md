@@ -23,8 +23,8 @@ We provide the FreeCAD project "pneunet.fcstd" in the directory [PneuNets-Grippe
 This part handles the design of the mounnting mechanism of three PneuNets Actuators, we have to take in consideration the constraints of achieving the desired motion of the actautor. The effective constraints are the dimensions of the head of PneuNets Actuator and its length as well. The idea based on how to make PneuNet actuator which is casted from hot silicon mounted with glass material, it is little bit tricky because of both of them have different material properties. The solution is designing a housing for the PneuNet actuator and encapsulating from each side tightly, one of the layer of the mounting has the same dimensions of the head and the other layer has smaller dimensions and then fixing them.
 The figures belows shows the holding mechanism, the fourth layer has dimensions 20x30 for each inlet of PneuNet and the fifth layer has dimensions 20X16.
 
-<img src="../images/FourthLayer.svg" align="left" width="250"/>
-<img src="../images/FifthLayer.svg" align="left" width="250"/>
+<img src="../images/fourthlayer.png" align="left" width="250"/>
+<img src="../images/fifthlayer.png" align="left" width="250"/>
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
@@ -33,13 +33,13 @@ The next part of mounting mechanism is air distribution, you can see in the foll
 
 <img src="../images/firstlayer1.png" align="left" width="250"/>
 <img src="../images/SecondLayer.png" align="left" width="250"/>
-<img src="../images/ThirdLayer.svg" align="left" width="250"/>
+<img src="../images/thirdlayer.png" align="left" width="250"/>
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 
 The other solution for providing the pressurized air is using pneumatic connector, but it also has the bending problem of tubes, but it is a good technique to prevent air leakage. In the following experiment, we are going to fix directly PneuNet. The figure below shows the pneumatic connection.
 
-<img src="../images/pneumatic connector.jpg" align="left" width="250"/>
+<img src="../images/pneumatic connector.jpg" align="left" width="200"/>
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
 In the following respiratory,  the FreeCAD project is provided "Layers_Design.fcstd" in the directory [PneuNets-Gripper/images](https://github.com/SofaDefrost/Tutorials/tree/master/PneuNets-Gripper/images).
