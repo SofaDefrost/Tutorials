@@ -36,6 +36,12 @@ The mass of the material can be defined with the UniformMass component, which as
 ```python
 finger.createObject('UniformMass', totalmass='0.0008')
 ```
+Note that by default, the gravity is defined as "0 -9.81 0". You can redefine it with the following command in the rootNode:
+```python
+rootNode.findData('gravity').value='-9810 0 0';
+```
+This corresponds to a gravity defined along the x axis, assuming the length unit is millimeters.
+
 ### Stiff layer
 
 To define the constitutive law of the stiff layer, we will create a new node and define a new ForceField with stiffer parameters only on the points which constitute the layer. To easily define the indices of the points which will be selected, we use the boxROI components wich allows to define a box that will contain all the points of the layer.
@@ -84,10 +90,12 @@ To interactively fill the cavity, we use a PythonScriptController, which is a co
 ```python
 rootNode.createObject('PythonScriptController', filename="controllerGripper.py", classname="controller")
 ```
+In this case, the controller allows to interactively add air to the cavity by pressing ctrl + '+' and deflate by pressing ctrl + '-'.
+
 
 ## Solving the constraints
 
- To solve the constraints, such as the one define by the pressure actuator, we have to add to the rootNode the component FreeMotionAnimationLoop that will build up the system including contraints. The component GenericConstraintSolver will also be added to solve the constraints. Finally, we add the component LinearConstraintCorrection to the finger Node to take into account the correction due to the cavity constraint to the velocity and position:
+ To solve the constraints, such as the one define by the pressure actuator, we have to add to the rootNode the component FreeMotionAnimationLoop that will build up the system including contraints. The component GenericConstraintSolver will also be added to solve the constraints problem. Finally, we add the component LinearConstraintCorrection to the finger Node to take into account the correction due to the cavity constraint to the velocity and position:
 ```python
 rootNode.createObject('FreeMotionAnimationLoop')
 rootNode.createObject('GenericConstraintSolver', maxIterations="10000", tolerance="1e-3")
@@ -96,11 +104,90 @@ rootNode.createObject('GenericConstraintSolver', maxIterations="10000", toleranc
 .
 finger.createObject('LinearSolverConstraintCorrection', solverName='directSolver')
 ```
-  
+With all these components, the scene is now runable and can be used to inflate and deflate the finger. 
+
+![Real images](../images/PneuNets-gripper_OneFingerBendingAll.png)
+
+
+## Creating the gripper
+
+### Add fingers
+
+Now, to create an actual gripper, we just need to create two more fingers and define their positions. To do that, you can use the same mesh files and use the 'translation' and 'rotation' attributes in the mesh loaders. Check the scene file in the appendix for more details.
+
+### Add something to grab and a plane to put it on
+
+In this scene, we create the object to grab and define it as rigid. This implies creating a new node, adding a time integration and a solver component, defining a mass, and defining constraint corrections that will be used later for collisons. 
+
+```python
+cube = rootNode.createChild('cube')
+cube.createObject('EulerImplicit', name='odesolver')
+cube.createObject('SparseLDLSolver', name='linearSolver')
+cube.createObject('MechanicalObject', template="Rigid", scale="4", position='-23 16 0 0 0 0 1')
+cube.createObject('UniformMass', mass='0.0008  74088  0.2352 0 0  0 0.2352 0  0 0 0.2352')                cube.createObject('UncoupledConstraintCorrection')
+```
+
+We also need to define a plane, using the predefined meshes of SOFA:
+
+```python
+planeNode = rootNode.createChild('Plane')
+planeNode.createObject('MeshObjLoader', name='loader', filename="mesh/floorFlat.obj", triangulate="true", rotation="0 0 270", scale =10, translation="-122 0 0")
+planeNode.createObject('Mesh', src="@loader")
+planeNode.createObject('MechanicalObject', src="@loader")
+```
+In this case, the file "floorFlat.obj" is defined in a shared directory of SOFA that is accessible in any SOFA scene.
+
+### Add collisions
+
+As it stands, objects would go through each other like if they were ghosts. It is therefore necessary to handle collisions. This is simply done in SOFA by adding a collision model. In the case of 3-dimensional objects described with triangles and tetrahedra, this is typically done by adding the components 'Triangle', 'Line' and 'Point', that define the elements on the surface of the objects.
+
+#### Plane
+ The case of the plane is the most straignthforward: it is described by a surface and the components of collision can be directly added to its node, specifying it is not moving during the simulation:
+ 
+```python
+planeNode.createObject('Triangle', simulated="0", moving="0")
+planeNode.createObject('Line', simulated="0", moving="0")
+planeNode.createObject('Point', simulated="0", moving="0")
+```
+
+#### Object to grab
+
+For the object to grab, we said it as going to be rigid, but we did not define its shape yet. This is needed to define a collision model. Hence, we create a child node that will load this shape (predefined mesh available in SOFA), which we choose to be a cube and we add the collision model. It is also necessary to add a rigid mapping which will map the degrees of freedom of the cube mesh to a rigid SOFA component.
+```python
+cubeCollis = cube.createChild('cubeCollis')
+cubeCollis.createObject('MeshObjLoader', name="loader", filename="mesh/smCube27.obj", triangulate="true",  scale="6")
+cubeCollis.createObject('Mesh', src="@loader")
+cubeCollis.createObject('MechanicalObject', translation='0 0 0')
+cubeCollis.createObject('Triangle')
+cubeCollis.createObject('Line')
+cubeCollis.createObject('Point')
+cubeCollis.createObject('RigidMapping')
+```
+#### Fingers
+
+The procedure is similar with the fingers: in a child node, we load a mesh representing the surface of the fingers and apply the collision model on it. Note that the nodes of this surface mesh need not match the ones of the associated volumetric mesh. Indeed, a barycentric mapping is used to map those collision degrees of freedom to the volumetric mesh ones:
+
+```python
+collisionFinger = finger.createChild('collisionFinger')
+collisionFinger.createObject('MeshSTLLoader', name='loader', filename=path+'pneunetCut.stl', translation = translateFinger)
+collisionFinger.createObject('Mesh', src='@loader', name='topo')
+collisionFinger.createObject('MechanicalObject', name='collisMech')
+collisionFinger.createObject('Triangle', selfCollision="false")
+collisionFinger.createObject('Line',selfCollision="false")
+collisionFinger.createObject('Point', selfCollision="false")
+collisionFinger.createObject('BarycentricMapping')
+```
+
+
+## That's it, you can now run the simulation and try to grab the cube!
+
+If you want to play around, you can add components OglModel for every object to have a visual representation that suits you.
+
+![Real images](../images/PneuNets-gripper_inAction.png)
 
 ## Appendix
 
-Here is the global SOFA scene simulation of the soft pneunet Gripper
+Here is the final SOFA scene simulation of the soft pneunet Gripper
 ```python
 import Sofa
 import math

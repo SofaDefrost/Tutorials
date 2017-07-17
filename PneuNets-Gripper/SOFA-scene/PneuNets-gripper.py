@@ -24,7 +24,7 @@ def createScene(rootNode):
                 rootNode.createObject('GenericConstraintSolver', maxIterations="10000", tolerance="1e-3")
                 rootNode.createObject('CollisionPipeline', verbose="0")
                 rootNode.createObject('BruteForceDetection', name="N2")
-                rootNode.createObject('CollisionResponse', response="FrictionContact", responseParams="mu=0.6")
+                rootNode.createObject('CollisionResponse', response="FrictionContact", responseParams="mu=0.7")
                 rootNode.createObject('LocalMinDistance', name="Proximity", alarmDistance="5", contactDistance="1", angleCone="0.01")
 
 		rootNode.createObject('BackgroundSetting', color='0 0.168627 0.211765')
@@ -44,7 +44,8 @@ def createScene(rootNode):
                 cube.createObject('EulerImplicit', name='odesolver')
                 cube.createObject('SparseLDLSolver', name='linearSolver')
                 cube.createObject('MechanicalObject', template="Rigid", scale="4", position='-23 16 0 0 0 0 1')#, dx="47.0", dy="10", dz="8", rx="10" ,ry="10")
-                cube.createObject('UniformMass', mass='0.0008  74088  0.2352 0 0  0 0.2352 0  0 0 0.2352')
+                #cube.createObject('UniformMass', mass='0.0008  74088  0.2352 0 0  0 0.2352 0  0 0 0.2352')
+                cube.createObject('UniformMass', mass='0.0008')
                 cube.createObject('UncoupledConstraintCorrection')
                 
                 #collision
