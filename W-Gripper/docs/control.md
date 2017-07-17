@@ -30,13 +30,13 @@ Before starting the code and the control we have to cable and connect the driver
 
 
   <img src="../images/control/diversPluged.png" width="200" alt="drivers plugged in" align="right">
-  <br><br>
+  <br><br><br>
 First take your MegaPi board and the two Stepper drivers. Plug the divers on the port 1 and 2 of the board, such as shown on the picture aside. 
 <br><br>
   
 <img src="../images/control/motorsWireConnection.png" width="150" alt="drivers plugged in" align="left">  
 Then take the gripper and connect the motors cables to the plugs and plug them on the board. Make sure the cables are on the right order : if you are using the same motors as described in the fabrication, the order shall be black (A+), green (A-), red (B-), blue (B+). You can check on the back of the board the pin name and assure your connections are correct.  
-
+<br>
 You shall make sure that if you're looking to the robot and the pulley are facing you, the motor on your right is plug to port 1 and the left one is plug to port 2. If they are plug not plug correctly they will be turning the wrong way.
 
 ![Motors connection](../images/control/motorsConnected.jpg)  
@@ -112,7 +112,7 @@ As we want the motor to run repeatedly we can for now put it in the loop functio
 ```C++
 void setup()
 {
-	 StepperInit();
+   StepperInit();
 }
 
 void loop()
@@ -123,7 +123,7 @@ void loop()
 The problem is we actually want to be able to control the rotation of the motors and send the wanted position to the arduino so he command the motors to move so. In order to communicate with the arduino, we will use Serial communication ([for more information see Serial] (https://www.arduino.cc/en/Reference/Serial). Serial communication must be initialized by setting the frequency of the communication by using __Serial.begin(_int_ frequency)__. So we will but that line of code in the setup function.
 
 ```C++
-	 Serial.begin(9600);
+   Serial.begin(9600);
 ```
 In the arduino IDE you can open a serial communication by clicking on the magnifying glass icone. You must be connected to the board before doing this.
 
@@ -183,8 +183,8 @@ void StepperInit()
 
 void setup()
 { 
-	 Serial.begin(9600); 
-	 StepperInit();
+    Serial.begin(9600); 
+    StepperInit();
 }
 
 void loop()
@@ -195,12 +195,21 @@ void loop()
     value = Serial.parseInt();
     StepperMoveTo(value);
   }
+  StepperRun();
 }
 ```
-
-__TODO explain the timerOne use and how it works__
-
-final version:
+In order to improve the behaviour, we are going to separate the rotation of the motor from the serial reading and converting values. Indeed, we want the motors to turn on regular step wether we get new values on the serial or not. As this operation take time, we can use the arduino's timer to separate the motor's step from the rest of the code.  
+We already have imported and installed the TimerOne librairie it defines an unique object Timer1 that interrupt the  . We will only use 2 functions to separate the actions :
+ * __Timer1.initialize( _int_ time)__ that defines the delay between two interruptions.
+ * __Timer1.attachInterrupt(_function_ function)__ wich attach the function that will be called at each intteruption.
+ 
+We already have the function we want to attach : __StepperRun()__. We just have to initialize the Timer1 with a reasonable period (if the period is to long, then it will be worst than before and the motor will turn very slowly, if it's to short the program will never enter the loop and will lock up). Actually we picked up 100 ms. So we just have to remove the StepperRun() call from the loop and add those lines to the setup :
+```C++
+  Timer1.initialize(100);
+  Timer1.attachInterrupt(StepperRun);
+```
+  
+And then that's it, we've separated the rotation of the motor, wich is now periodical, from the communication with the arduino. So here is our final version of the code:
 ```C++
 #include "TimerOne.h"
 #include "MeMegaPi.h"
@@ -220,13 +229,13 @@ void StepperMove(int value)
 
 void StepperRun()
 {
-    stepper[0].run();
-    stepper[1].run();   
+  stepper[0].run();
+  stepper[1].run();   
 }
 
 void StepperInit()
 {
-   for(int i =0;i<2;i++)
+  for(int i =0;i<2;i++)
     {
       // Change these to suit your stepper if you want
       stepper[i].setMaxSpeed(100);
@@ -235,14 +244,14 @@ void StepperInit()
       stepper[i].enableOutputs();
   
     }
-  Timer1.initialize(100);
-  Timer1.attachInterrupt(StepperRun);
 }
 
 void setup()
 { 
-	 Serial.begin(9600); 
-	 StepperInit();
+  Serial.begin(9600); 
+  StepperInit();
+  Timer1.initialize(100);
+  Timer1.attachInterrupt(StepperRun);
 }
 
 void loop()
@@ -255,3 +264,5 @@ void loop()
   }
 }
 ```
+    
+Actually, next step would be to make SOFA and the arduino communicate directly so we won't have to enter manually the desired rotation, but for now this communication has not been implemented yet.
