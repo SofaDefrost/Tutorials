@@ -12,7 +12,10 @@ For the controlling part you will need :
  * The gripper prototype done following the fabrication part of this tutorial.
  * A multimeter
  * A 9V power supply with jack adapter
- * A small phillips screwdriver
+ * A small phillips screwdriver  
+ 
+<img src="../images/control/boardAndDrivers.png" width="600" alt="Board and Drivers">
+
 
 #### Software:
 Before begining the program you will need to install on your computer :
@@ -22,24 +25,32 @@ Before begining the program you will need to install on your computer :
  * TimerOne librairie [(available here)](https://playground.arduino.cc/Code/Timer1) _make sure to include the librairies in the arduino's librairies folder in order to use it._
 
 ### Preparation
-First of all we are going to see how to connect the gripper, the driver and the board in order to program them and control the robot.
+Before starting the code and the control we have to cable and connect the drivers, the robot and all the wire to the board and the computer. This is a description of the board and the differents parts we are going to use.
+<img src="../images/control/boardDescription.png" width="600" alt="description of the MegaPi board">
 
-First take your MegaPi board and the two Stepper drivers. Plug the divers on the port 1 and 2 of the board.  
 
-__TODO insert images__  
-
-Then take the gripper and connect the motors cables to the plugs and plug them on the board. Make sure the cables are on the right order : if you are using the same motors as described in the fabrication, the order shall be _black (A+), green (A-), red (B-), blue (B+)_. You can check on the back of the board the pin name and assure your connections are correct.  
-
-__TODO insert images__  
+  <img src="../images/control/diversPluged.png" width="200" alt="drivers plugged in" align="right">
+  <br><br>
+First take your MegaPi board and the two Stepper drivers. Plug the divers on the port 1 and 2 of the board, such as shown on the picture aside. 
+<br><br>
+  
+<img src="../images/control/motorsWireConnection.png" width="150" alt="drivers plugged in" align="left">  
+Then take the gripper and connect the motors cables to the plugs and plug them on the board. Make sure the cables are on the right order : if you are using the same motors as described in the fabrication, the order shall be black (A+), green (A-), red (B-), blue (B+). You can check on the back of the board the pin name and assure your connections are correct.  
 
 You shall make sure that if you're looking to the robot and the pulley are facing you, the motor on your right is plug to port 1 and the left one is plug to port 2. If they are plug not plug correctly they will be turning the wrong way.
 
+![Motors connection](../images/control/motorsConnected.jpg)  
+
+
+<br><br>
+<img src="../images/control/driversPotentiometer.png" width="150" alt="drivers plugged in" align="right">  
 The Makeblock board has an external alimentation for the motor. In order to power the motor you shall connect it with a 9V power supply. The switch just aside control the turning on. Make sure you don't turn it on unless you want to. 
 With a multimeter, you can adjust the voltage send to the motor by adjusting the position of the potentiometer on the driver. We fixed the output voltage at 4V.
-
-__TODO insert images__  
+<br><br><br>
 
 The gripper is ready, next step is the control. Let's now have a look on the programmation.
+<br><br><br>
+![Gripper ready](../images/control/prototype.jpg)
 
 ### Programmation
 The programmation of the gripper's control is going to be done using arduino IDE and using the MakeBlock libraries. Those choices has been made beaucause of the ease of use of the materials and the libraries. _If you have never used arduino IDE before you can have a look here : [first step with arduino IDE ](http://www.arduino.org/learning/getting-started/first-steps-with-arduino-ide)._
@@ -73,7 +84,8 @@ void StepperInit(){
 
 To handle the motor's rotation the library provides us two function:
   * __stepper.move(_int_ number-of-micro-steps)__
-  * __stepper.moveTo(_int_ position)__
+  * __stepper.moveTo(_int_ position)__  
+  
 Thoose function will store the desired position to make the rotation, you must call the function __stepper.run()__. Each time it is called, the motor will make one microstep toward the desired position.
 
 As we are currently handling two motors and we want them to sychronize and rotate on opposite directions we can define several function that will handle it :
