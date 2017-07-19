@@ -1,6 +1,6 @@
 Fabricating, Simulating and Controlling the W-Gripper
 =======================
-Contributors: Zhongkai Zhang, Piyush Jain, Erwan Douaille, Jeremie Dequidt, Christian Duriez
+Contributors: Zhongkai Zhang, Piyush Jain, Erwan Douaille, Jeremie Dequidt, Christian Duriez, Camille Lihouck
 
 ### Introduction
 
