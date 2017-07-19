@@ -1,6 +1,6 @@
 Controlling the W-Gripper
 ============================
-In this part of the tutorial we are going to go through the differents steps of the programmation and the control of the motors that actuate the grippers.
+In this part of the tutorial we are going to go through the different steps of the programmation and the control of the motors that actuate the grippers.
 
 ### Prerequisites
 To follow this part of the tutorial, you will need a few things. First, make sure you have the required material and install the required software before starting.
