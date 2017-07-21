@@ -16,6 +16,9 @@ Starting from the 3D model (surface mesh), it is mandatory to compute volume ele
 
 ### with Tetrahedra
 
+Tetrahedrons mesh are generated with CGAL plugin which uses the notion of restricted Delaunay triangulation. Tetrahedrons mesh are robust and always work for complex volumes. It is used as any 3D volume, regardless of shape or topology, can be meshed with it. Tetrahedral meshing is easily automated and requires no user input while creating a mesh. It required more computational resources but lead to more accurate results. Quadratic mid-side node tetrahedra elements are good for bending dominated problems as compared to linear tetrahedra elements which yeild unacceptable approximations. Quadratic mid-side node tetrahedral elements can predict the local stress concentration very well, they can also be used for contact problems to achieve accurate results.
+
+
 ### with Hexahedra
 
 Hexahedral elements have better mechanical properties for simulation: it is more stable and requires less elements making it suitable for interactive simulation. Building hexaedral volumes can be a tedious task given the geometry we want to mesh. For the W-Gripper, the simple geometry (a planar mesh extruded along the Y-axis) enables to compute hexaedra. For that we will rely on a SOFA component called `ExtrudeQuadsAndGenerateHexas`. There are two important parameters for this component: `thicknessOut` (how depth will be the extrusion) and `numberOfSlices` (how many slices will be build along the extrusion axis). Once this is done, additional components are added to create a topology from this hexahedra (`HexahedronSetTopologyContainer`, `HexahedronSetTopologyModifier`, `HexahedronSetTopologyAlgorithms`, `HexahedronSetGeometryAlgorithms`) and a dedicated FEM forcefield is needed (`HexahedronFEMForceField`). Adding other components to make the simulation leads to the following scene:
