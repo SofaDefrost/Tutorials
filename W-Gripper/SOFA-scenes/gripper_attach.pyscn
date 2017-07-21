@@ -1,0 +1,190 @@
+import Sofa
+
+import sys
+
+sys.path.append('/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages')
+
+import math
+import os
+path = os.path.dirname(os.path.abspath(__file__))+'/mesh/'
+meshrobot=path+'finger0.vtu'
+
+from SofaPython import Quaternion
+
+from math import cos, sin, pi
+
+cylinderOffset = 30.0;
+Radius=22.75
+
+def transformTableInString(Table):
+        sizeT =  len(Table);
+        strOut= ' ';
+        for p in range(sizeT):
+            strOut = strOut+ str(Table[p])+' '
+
+
+        return strOut
+
+
+def createScene(rootNode):
+        rootNode.findData('gravity').value='-9810 0 0';
+        rootNode.findData('dt').value="0.01"
+        rootNode.createObject('RequiredPlugin', pluginName='SoftRobots')
+        rootNode.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels hideCollisionModels hideBoundingCollisionModels showForceFields showInteractionForceFields hideWireframe showMappings')
+
+        rootNode.createObject('BackgroundSetting', color='0 0.168627 0.211765')
+        rootNode.createObject('OglSceneFrame', style="Arrows", alignment="TopRight")
+
+
+
+        ################################ Roller Object ###################################
+
+        # mechanics
+
+        cylinder =rootNode.createChild('cylinder')
+        cylinder.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels hideCollisionModels hideBoundingCollisionModels showForceFields showInteractionForceFields showWireframe showMappings')
+        cylinder.createObject('EulerImplicit', name='odesolver')
+        cylinder.createObject('CGLinearSolver', name='cylinderSolver', iterations='1000', tolerance="1e-5", threshold="1e-5")
+        cylinder.createObject('MechanicalObject', template="Rigid", scale="5", dx="92.0", dy=str(cylinderOffset), dz="-25", rx="90" ,ry="0", velocity='0 0 0 0 0 -0.3')
+        cylinder.createObject('UniformMass', totalmass='0.030')
+        cylinder.createObject('UncoupledConstraintCorrection')
+        cylinder.createObject('FixedConstraint', fixAll='1')
+
+
+
+
+        #visualization
+        cylinderVisu = cylinder.createChild('cylinderVisu')
+        cylinderVisu.createObject('OglModel', name="Visual", fileMesh="mesh/cylinder_JD.obj",  color="1.0 0.1 0.5", scale3d="1000 1000 2000", rx='90', dy='30')
+        cylinderVisu.createObject('RigidMapping')
+
+        ################################ Roller2 Object ###################################
+
+        # mechanics
+        cylinder2 =rootNode.createChild('cylinder2')
+        cylinder2.createObject('EulerImplicit', name='odesolver')
+        cylinder2.createObject('CGLinearSolver', name='cylinderSolver2', iterations='1000', tolerance="1e-5", threshold="1e-5")
+        cylinder2.createObject('MechanicalObject', template="Rigid", scale="5", dx="92.0", dy=str(-cylinderOffset), dz="-25", rx="90" ,ry="0", velocity='0 0 0 0 0 0.3')
+        cylinder2.createObject('UniformMass', totalmass='0.030')
+        cylinder2.createObject('UncoupledConstraintCorrection')
+        cylinder2.createObject('FixedConstraint', fixAll='1')
+
+
+
+
+        #visualization
+        cylinder2Visu = cylinder2.createChild('cylinder2Visu')
+        cylinder2Visu.createObject('OglModel', name="Visual", fileMesh="mesh/cylinder_JD.obj", color="1.0 0.1 0.5", scale3d="1000 1000 2000", rx='90', dy='30')
+        cylinder2Visu.createObject('RigidMapping')
+
+
+        ############################### FINGER 1 ###################################
+
+        finger = rootNode.createChild('finger')
+        finger.createObject('EulerImplicit', name='odesolver')
+        #finger.createObject('ShewchukPCGLinearSolver', iterations='15', name='linearsolver', tolerance='1e-10', preconditioners='preconditioner', use_precond='true', use_first_precond='false', update_step='1')
+       
+        #finger.createObject('CGLinearSolver', iterations='1000', tolerance="1e-5", threshold="1e-5",  name="CG")  
+        
+
+        finger.createObject('SparseLDLSolver', name="precond")
+
+        loader= finger.createObject('MeshVTKLoader', name="loader", filename=meshrobot)
+        container=finger.createObject('TetrahedronSetTopologyContainer', src="@loader", name='container')
+
+        finger.createObject('TetrahedronSetTopologyModifier')
+        finger.createObject('TetrahedronSetTopologyAlgorithms', template='Vec3d')
+        finger.createObject('TetrahedronSetGeometryAlgorithms', template='Vec3d')
+
+        moBelt = finger.createObject('MechanicalObject', name="tetras", template="Vec3d", position='@container.position', showIndices="false", showIndicesScale="4e-5", ry="0", rz="-90", dx="70", dy="50", dz="-20")
+        
+        
+        
+        finger.createObject('UniformMass', totalmass='0.05')
+        finger.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.45',  youngModulus='200')
+
+
+        # finger.createObject('BoxROI', name='ROI1', box='128 -42 -94 118 62 -90', drawBoxes='true')
+        # finger.createObject('BoxROI', name='ROI2', box='128 -42 106 118 62 108', drawBoxes='true')
+        # finger.createObject('RestShapeSpringsForceField', points='@ROI1.indices', stiffness='1e12')
+        # finger.createObject('RestShapeSpringsForceField', points='@ROI2.indices', stiffness='1e12')
+
+
+        #finger.createObject('SparseLDLSolver', name='preconditioner')
+
+        finger.createObject('LinearSolverConstraintCorrection', solverName='precond')
+
+       
+
+        # feuille/controlledPoints
+
+        controlledPoints = finger.createChild('controlledPoints')
+        controlledPoints.createObject('MechanicalObject', name="actuatedPoints", template="Vec3d", position="  75 45 0   75 -45 0")
+        controlledPoints.createObject('BarycentricMapping', mapForces="true", mapMasses="false")
+        
+        
+        ############### small script to compute the rigid Mapping of the nodes attached to the weels
+        
+        
+        loader.init()
+        #container.init()
+        position= loader.findData('position').value;
+        
+        #moBelt.init()
+        
+        #moBelt.bwdInit()
+        
+        #position= moBelt.findData('position').value;
+        
+        numNodes = len(position)
+        
+        
+        
+        #first cylinder
+        mapPos=[];
+        indices=[];
+        
+        #second cylinder
+        mapPos2=[];
+        indices2=[];
+        for p in range(numNodes):
+            
+            x = position[p][0];
+            y = position[p][1];
+            z = position[p][2];
+            
+            if (y>9.9) & (x - 50 < -cylinderOffset):
+                
+                l = 50- cylinderOffset  - x; 
+                
+                teta = l / Radius;
+                mapPos = mapPos + [-Radius*cos(teta),z , -Radius*sin(teta)]
+                indices = indices + [p];
+
+            if (y>9.9) & (x - 50 > cylinderOffset):
+                
+                l = x - 50 - cylinderOffset ; 
+                
+                teta = l / Radius;
+                mapPos2 = mapPos2 + [-Radius*cos(teta),z , Radius*sin(teta)]
+                indices2 = indices2 + [p];
+                
+
+        #first cylinder
+        
+        cylinderAttachPoints = cylinder.createChild('cylinderAttachPoints')
+        cylinderAttachPoints.createObject('MechanicalObject', name='attachPointsMO', position = transformTableInString(mapPos), showObject='1')
+        cylinderAttachPoints.createObject('RigidMapping')
+        finger.createObject('RestShapeSpringsForceField', points=transformTableInString(indices), stiffness='1000', external_rest_shape='../cylinder/cylinderAttachPoints/attachPointsMO', drawSpring='1')
+        
+        
+        #second cylinder
+        
+        cylinder2AttachPoints = cylinder2.createChild('cylinder2AttachPoints')
+        cylinder2AttachPoints.createObject('MechanicalObject', name='attachPointsMO', position = transformTableInString(mapPos2), showObject='1')
+        cylinder2AttachPoints.createObject('RigidMapping')
+        finger.createObject('RestShapeSpringsForceField', points=transformTableInString(indices2), stiffness='1000', external_rest_shape='../cylinder2/cylinder2AttachPoints/attachPointsMO', drawSpring='1')
+                
+
+
+        return rootNode
