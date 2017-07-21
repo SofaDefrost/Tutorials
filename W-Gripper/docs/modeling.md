@@ -16,7 +16,7 @@ Starting from the 3D model (surface mesh), it is mandatory to compute volume ele
 
 ### with Tetrahedra
 
-Tetrahedrons mesh are generated with CGAL plugin which uses the notion of restricted Delaunay triangulation. Tetrahedrons mesh are robust and always work for complex volumes. It is used as any 3D volume, regardless of shape or topology, can be meshed with it. Tetrahedral meshing is easily automated and requires no user input while creating a mesh. It required more computational resources but lead to more accurate results. Quadratic mid-side node tetrahedra elements are good for bending dominated problems as compared to linear tetrahedra elements which yeild unacceptable approximations. Quadratic mid-side node tetrahedral elements can predict the local stress concentration very well, they can also be used for contact problems to achieve accurate results.
+Tetrahedrons mesh are generated with CGAL plugin which uses the notion of restricted Delaunay triangulation. Tetrahedrons mesh are robust and always work for complex volumes. It is used as any 3D volume, regardless of shape or topology, which can be meshed with it. Tetrahedral meshing is easily automated and requires no user input while creating a mesh. It requires more computational resources but lead to more accurate results. Quadratic mid-side node tetrahedral elements are good for bending dominated problems as compared to linear tetrahedral elements which yeild unacceptable approximations. Quadratic mid-side node tetrahedral elements can predict the local stress concentration very well, they can also be used for contact problems to achieve accurate results.
 
 
 ### with Hexahedra
