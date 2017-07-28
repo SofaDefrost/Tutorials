@@ -83,35 +83,35 @@ def createScene(rootNode):
 
         ################################ Grasped Object ###################################
         # mechanics
-        cube =rootNode.createChild('cube')
-        cube.createObject('EulerImplicit', name='odesolver')
-        cube.createObject('CGLinearSolver', name='cubeSolver')
-        cube.createObject('MechanicalObject', template="Rigid", scale="1", position='38 0 0 0 0 0 1')
-
-	Ix= mass/12.0*(3.0*R*R + h*h)
-	Iy= mass/12.0*(3.0*R*R + h*h)
-	Iz= mass*R*R/2.0
-
-        cube.createObject('UniformMass', mass='0.01'+str(volume)+' ' +str(Ix)+ ' 0 0 0 '+str(Ix)+' 0 0 0 '+str(Iz))
-        cube.createObject('UncoupledConstraintCorrection')
-
-        #collision
-        cubeCollis = cube.createChild('cubeCollis')
-	cubeCollis.findData('activated').value=1
-        cubeCollis.createObject('MeshObjLoader', name="loader", filename="mesh/cylinder_JD.obj", triangulate="true",  scale3d="400 400 2000", translation="0 0 -20")
-        cubeCollis.createObject('Mesh', src="@loader")
-        cubeCollis.createObject('MechanicalObject')
-        cubeCollis.createObject('Triangle')
-        cubeCollis.createObject('Line')
-        cubeCollis.createObject('Point')
-        cubeCollis.createObject('RigidMapping')
-
-        #cubeCollis.createObject('LocalMinDistance', name="Proximity",alarmDistance="4", contactDistance="3", angleCone="0.01")
-
-        #visualization
-        cubeVisu = cube.createChild('cubeVisu')
-        cubeVisu.createObject('OglModel', name="Visual", fileMesh="mesh/cylinder_JD.obj", color="0.0 0.1 0.5", scale3d="400 400 2000" , translation="0 0 -20")
-        cubeVisu.createObject('RigidMapping')
+    #     cube =rootNode.createChild('cube')
+    #     cube.createObject('EulerImplicit', name='odesolver')
+    #     cube.createObject('CGLinearSolver', name='cubeSolver')
+    #     cube.createObject('MechanicalObject', template="Rigid", scale="1", position='38 0 0 0 0 0 1')
+    #
+	# Ix= mass/12.0*(3.0*R*R + h*h)
+	# Iy= mass/12.0*(3.0*R*R + h*h)
+	# Iz= mass*R*R/2.0
+    #
+    #     cube.createObject('UniformMass', mass='0.01'+str(volume)+' ' +str(Ix)+ ' 0 0 0 '+str(Ix)+' 0 0 0 '+str(Iz))
+    #     cube.createObject('UncoupledConstraintCorrection')
+    #
+    #     #collision
+    #     cubeCollis = cube.createChild('cubeCollis')
+	# cubeCollis.findData('activated').value=1
+    #     cubeCollis.createObject('MeshObjLoader', name="loader", filename="mesh/cylinder_JD.obj", triangulate="true",  scale3d="450 450 1000", translation="0 0 -5", rotation = "0 90 0")
+    #     cubeCollis.createObject('Mesh', src="@loader")
+    #     cubeCollis.createObject('MechanicalObject')
+    #     cubeCollis.createObject('Triangle')
+    #     cubeCollis.createObject('Line')
+    #     cubeCollis.createObject('Point')
+    #     cubeCollis.createObject('RigidMapping')
+    #
+    #     #cubeCollis.createObject('LocalMinDistance', name="Proximity",alarmDistance="4", contactDistance="3", angleCone="0.01")
+    #
+    #     #visualization
+    #     cubeVisu = cube.createChild('cubeVisu')
+    #     cubeVisu.createObject('OglModel', name="Visual", fileMesh="mesh/cylinder_JD.obj", color="0.0 0.1 0.5", scale3d="450 450 1000" , translation="0 0 -5", rotation = "0 90 0")
+    #     cubeVisu.createObject('RigidMapping')
 
 	#return rootNode
 
@@ -287,7 +287,7 @@ def createScene(rootNode):
         cylinderAttachPoints = cylinder.createChild('cylinderAttachPoints')
         cylinderAttachPoints.createObject('MechanicalObject', name='attachPointsMO', position = transformTableInString(mapPos), showObject='1')
         cylinderAttachPoints.createObject('RigidMapping')
-        finger.createObject('RestShapeSpringsForceField', points=transformTableInString(indices), stiffness='1e8', external_rest_shape='../cylinder/cylinderAttachPoints/attachPointsMO')
+        finger.createObject('RestShapeSpringsForceField', points=transformTableInString(indices), stiffness='1000', external_rest_shape='../cylinder/cylinderAttachPoints/attachPointsMO')
 
 
         #second cylinder
@@ -295,7 +295,7 @@ def createScene(rootNode):
         cylinder2AttachPoints = cylinder2.createChild('cylinder2AttachPoints')
         cylinder2AttachPoints.createObject('MechanicalObject', name='attachPointsMO', position = transformTableInString(mapPos2), showObject='1')
         cylinder2AttachPoints.createObject('RigidMapping')
-        finger.createObject('RestShapeSpringsForceField', points=transformTableInString(indices2), stiffness='1e8', external_rest_shape='../cylinder2/cylinder2AttachPoints/attachPointsMO')
+        finger.createObject('RestShapeSpringsForceField', points=transformTableInString(indices2), stiffness='1', external_rest_shape='../cylinder2/cylinder2AttachPoints/attachPointsMO')
 
 
 	#collision

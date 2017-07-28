@@ -43,7 +43,7 @@ class controller(Sofa.PythonScriptController):
             #disprotation2=0;
             disp1=0;
             disp2=0;
-            incr = 1.0;
+            incr = 0.25;
 	    incrV = 2.0;
 	    #step=1;
             #global count;
@@ -54,59 +54,40 @@ class controller(Sofa.PythonScriptController):
 
             #if (disp1 >= 64 & disprotation1 != 10):
 		    #while(disp1 != 64):
-            if (count <= 5):
+            if (count <= 35):
                     self.cylinderNode.getObject('cylinderMO').findData('velocity').value = "0 0 0 0 0 0"
-
-
-
                     self.cylinder2Node.getObject('cylinder2MO').findData('velocity').value = "0 0 0 0 0 0"
-                    print 'aaa'
-                    #print 'velocity' + str(vel1)
-                    if (count <= 25):
-		        print self.cylinderNode.getObject('cylinderMO').findData('velocity').value[0][5]
-                        disp1 = self.cylinderNode.getObject('cylinderMO').findData('position').value[0][0] + incr
+                    if (count <= 35):
+                        print self.cylinderNode.getObject('cylinderMO').findData('velocity').value[0][5]
+                        disp1 = self.cylinderNode.getObject('cylinderMO').findData('position').value[0][0] - incr
                         self.cylinderNode.getObject('cylinderMO').findData('position').value = disp1
-                        disp2 = self.cylinder2Node.getObject('cylinder2MO').findData('position').value[0][0] + incr
+                        disp2 = self.cylinder2Node.getObject('cylinder2MO').findData('position').value[0][0] - incr
                         self.cylinder2Node.getObject('cylinder2MO').findData('position').value = disp2
-
-                # disp1 = self.cylinderNode.getObject('cylinderMO').findData('position').value[0][0] - incr
-                # self.cylinderNode.getObject('cylinderMO').findData('position').value = disp1
-                # disp2 = self.cylinder2Node.getObject('cylinder2MO').findData('position').value[0][0] - incr
-                # self.cylinder2Node.getObject('cylinder2MO').findData('position').value = disp2
-		        print 'first step, count is : ' + str(count)
+                        print 'first step, count is : ' + str(count)
 
 
 
-            if (count > 5):
-                if (count <= 15):
-                    vel1 = self.cylinderNode.getObject('cylinderMO').findData('velocity').value[0][5] - incrV
+            if (count > 35):
+                if (count <= 43):
+                    vel1 = self.cylinderNode.getObject('cylinderMO').findData('velocity').value[0][5] + incrV
                     self.cylinderNode.getObject('cylinderMO').findData('velocity').value = "0 0 0 0 0 "+str(vel1)
-
-                    #disprotation1 = vel1 + self.dt * vel1
-
-                    vel2 = self.cylinder2Node.getObject('cylinder2MO').findData('velocity').value[0][5] + incrV
+                    vel2 = self.cylinder2Node.getObject('cylinder2MO').findData('velocity').value[0][5] - incrV
                     self.cylinder2Node.getObject('cylinder2MO').findData('velocity').value = "0 0 0 0 0 "+str(vel2)
                     print 'second step, count is : ' + str(count)
 
-                    #disprotation2 = vel1 + self.dt * vel1
 
 
-                if (count > 15):
+                if (count > 43):
 
                     self.cylinderNode.getObject('cylinderMO').findData('velocity').value = "0 0 0 0 0 0"
-
-
-
                     self.cylinder2Node.getObject('cylinder2MO').findData('velocity').value = "0 0 0 0 0 0"
-                    print 'aaa'
-                    #print 'velocity' + str(vel1)
-                    if (count <= 25):
-		        print self.cylinderNode.getObject('cylinderMO').findData('velocity').value[0][5]
+                    if (count <= 78):
+                        print self.cylinderNode.getObject('cylinderMO').findData('velocity').value[0][5]
                         disp1 = self.cylinderNode.getObject('cylinderMO').findData('position').value[0][0] + incr
                         self.cylinderNode.getObject('cylinderMO').findData('position').value = disp1
                         disp2 = self.cylinder2Node.getObject('cylinder2MO').findData('position').value[0][0] + incr
                         self.cylinder2Node.getObject('cylinder2MO').findData('position').value = disp2
-                    print 'third step, count is : ' + str(count)
+
 
 
 
