@@ -63,6 +63,8 @@ This method is quite simple to implement and does not create much additional com
 #### Drawback
 The drawback of this method, and in particular the "RestShapeSpringsForceField", is the fact that the spring force is only applied to the mesh, and not on the rollers. In fact the roller motion is still computed separately, as if it was a separated mechanical component. It becomes, somehow a "master" and the deformable surface becomes the "slave".
 
+Continue, go to step 5 : [Collision](simulationCollision.md) 
+
 
 
             
