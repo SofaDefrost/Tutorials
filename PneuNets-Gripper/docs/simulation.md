@@ -1,6 +1,6 @@
 # Simulation
 
-The simulation is done using the SOFA Open Source Framework and the "Soft-Robots" Plugin  dedicated for Real-time simulation of Soft Robots. To define the simulation, a Python scene file is created and fed as input to SOFA. In the following, we will describe, step by step, the creation of scene file that perfrom the simulation of the soft Pneunet gripper. 
+The simulation is done using the SOFA Open Source Framework and the "Soft-Robots" Plugin dedicated for Real-time simulation of Soft Robots. To define the simulation, a Python scene file is created and fed as input to SOFA. In the following, we will describe, step by step, the creation of scene file that perfrom the simulation of the soft Pneunet gripper. 
 
 ## Volumetric Meshing and Loading
 
@@ -14,7 +14,7 @@ In a SOFA scene the mesh is loaded using the loader component:
 finger.createObject('MeshVTKLoader', name='loader', filename=path+'pneunetCutCoarse.vtk')
 ```
 
-This mesh is then stored in a TetrahedronTopology component, and a MechanicalObject is component is created to store the degrees of freedom of the robot (which are the positions of all the nodes in the mesh)
+This mesh is then stored in a TetrahedronTopology component, and a MechanicalObject component is created to store the degrees of freedom of the robot (which are the positions of all the nodes in the mesh)
 
 ```python
 finger.createObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
@@ -28,7 +28,7 @@ finger.createObject('MechanicalObject', name='tetras', template='Vec3d', rx='0',
 
 ### Main Body
 
-Next, we need to define what kind of material we are going to simulate, and this is done by adding a ForceField component, which describes what internal forces are created when the object is deformed. In particular, this will define how soft or stiff the material is, if it has an elastic or more complex behaviour (Hyperelastic, plastic, etc...). In this example, we use the TetrehedronFEMForceField component with corresponds to an elastic material deformation but with large rotations. Attributes such as Young's Modulus and Poisson's ratio can be set within this component:
+Next, we need to define what kind of material we are going to simulate, and this is done by adding a ForceField component, which describes what internal forces are created when the object is deformed. In particular, this will define how soft or stiff the material is, if it has an elastic or more complex behaviour (Hyperelastic, plastic, etc...). In this example, we use the TetrehedronFEMForceField component which corresponds to an elastic material deformation but with large rotations. Attributes such as Young's Modulus and Poisson's ratio can be set within this component:
 ```python
 finger.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=500)
 ```
@@ -44,7 +44,7 @@ This corresponds to a gravity defined along the x axis, assuming the length unit
 
 ### Stiff layer
 
-To define the constitutive law of the stiff layer, we will create a new node and define a new ForceField with stiffer parameters only on the points which constitute the layer. To easily define the indices of the points which will be selected, we use the boxROI components wich allows to define a box that will contain all the points of the layer.
+To define the constitutive law of the stiff layer, we will create a new node and define a new ForceField with stiffer parameters only on the points which constitute the layer. To easily define the indices of the points which will be selected, we use the boxROI component wich allows to define a box that will contain all the points of the layer.
 
 ```python
 finger.createObject('BoxROI', name='boxROISubTopo', box='-100 22.5 -8 -19 28 8')
