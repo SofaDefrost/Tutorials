@@ -32,13 +32,13 @@ def createScene(rootNode):
                 rootNode.createObject('PythonScriptController', filename="controllerGripper.py", classname="controller")
 
                 planeNode = rootNode.createChild('Plane')
-                planeNode.createObject('MeshObjLoader', name='loader', filename="mesh/floorFlat.obj", triangulate="true", rotation="0 0 270", scale =10, translation="-122 0 0")
+                planeNode.createObject('MeshObjLoader', name='loader', filename=path+"floorFlat.obj", triangulate="true", rotation="0 0 270", scale =10, translation="-122 0 0")
                 planeNode.createObject('Mesh', src="@loader")
                 planeNode.createObject('MechanicalObject', src="@loader")
                 planeNode.createObject('Triangle', simulated="0", moving="0")
                 planeNode.createObject('Line', simulated="0", moving="0")
                 planeNode.createObject('Point', simulated="0", moving="0")
-                planeNode.createObject('OglModel',name="Visual", fileMesh="mesh/floorFlat.obj", color="1 0 0 1",rotation="0 0 270", scale =10, translation="-122 0 0")
+                planeNode.createObject('OglModel',name="Visual", fileMesh=path+"floorFlat.obj", color="1 0 0 1",rotation="0 0 270", scale =10, translation="-122 0 0")
 
                 cube = rootNode.createChild('cube')
                 cube.createObject('EulerImplicit', name='odesolver')
@@ -50,7 +50,7 @@ def createScene(rootNode):
                 
                 #collision
                 cubeCollis = cube.createChild('cubeCollis')
-                cubeCollis.createObject('MeshObjLoader', name="loader", filename="mesh/smCube27.obj", triangulate="true",  scale="6")
+                cubeCollis.createObject('MeshObjLoader', name="loader", filename=path+"smCube27.obj", triangulate="true",  scale="6")
                 cubeCollis.createObject('Mesh', src="@loader")
                 cubeCollis.createObject('MechanicalObject', translation='0 0 0')
                 cubeCollis.createObject('Triangle')
@@ -60,7 +60,7 @@ def createScene(rootNode):
                 
                 #visualization
                 cubeVisu = cube.createChild('cubeVisu')
-                cubeVisu.createObject('OglModel', name="Visual", fileMesh="mesh/smCube27.obj", color="0.0 0.1 0.5", scale="6.2")
+                cubeVisu.createObject('OglModel', name="Visual", fileMesh=path+"smCube27.obj", color="0.0 0.1 0.5", scale="6.2")
                 cubeVisu.createObject('RigidMapping')
 
 
