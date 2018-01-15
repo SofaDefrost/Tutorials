@@ -14,10 +14,10 @@ In a SOFA scene the mesh is loaded using the loader component:
 finger.createObject('MeshVTKLoader', name='loader', filename=path+'pneunetCutCoarse.vtk')
 ```
 
-This mesh is then stored in a TetrahedronTopologyContainer  component (linked to the loader through its ```src``` attribute), and a MechanicalObject component is created to store the degrees of freedom of the robot (which are the positions of all the nodes in the mesh)
+This mesh is then stored in a ```Mesh```  component (linked to the loader through its ```src``` attribute), and a MechanicalObject component is created to store the degrees of freedom of the robot (which are the positions of all the nodes in the mesh)
 
 ```python
-finger.createObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
+finger.createObject('Mesh', src='@loader', name='container')
 finger.createObject('MechanicalObject', name='tetras', template='Vec3d', rx='0', dz='0')
 ```
 
@@ -72,7 +72,7 @@ With the scene in this state, not much will happen in the simulation, merely a s
 
 ## Pneumatic Actuator and Python script controller
 
-In this section, we will introduce a pneumatic actuator that will allow to interactively simulate the inflation of the finger's cavity. To do that, we first create a node that will take care of this task. Then, the surface mesh of the cavity has to be loaded using a mesh loader and the position are stored in a Mesh component which is a container. A MechanicalObject is created to store the degrees of freedom of the cavity which will be deforming during the simulation. The actuator in itself is created with the component SurfacePressureConstraint which is directly associated to the mesh container through the attribute "triangles". The actuation can be defined either by pressure or volume growth. Finally, a BarycentricMapping component is created to map the deformation of the cavity mesh to the mesh of the finger:
+In this section, we will introduce a pneumatic actuator that will allow to interactively simulate the inflation of the finger's cavity. To do that, we first create a node that will take care of this task. Then, the surface mesh of the cavity has to be loaded using a mesh loader and the position are stored in a Mesh component which is a container. A MechanicalObject is created to store the degrees of freedom of the cavity which will be deforming during the simulation. The actuator is created with the component SurfacePressureConstraint which is directly associated to the mesh container through the attribute "triangles". The actuation can be defined either by pressure or volume growth. Finally, a BarycentricMapping component is created to map the deformation of the cavity mesh to the mesh of the finger:
 
 ```python
 cavity = finger.createChild('cavity')
@@ -83,22 +83,22 @@ cavity.createObject('SurfacePressureConstraint', name="SurfacePressureConstraint
 cavity.createObject('BarycentricMapping', name='mapping')
 ```
 
-To interactively fill the cavity, we use a PythonScriptController, which is a component referring to a python file performing some actions at the initialisation or during the simulation:
+To interactively inflate the cavity, we use a PythonScriptController, which is a component referring to a python file performing some actions at the initialisation or during the simulation:
 ```python
 rootNode.createObject('PythonScriptController', filename="controllerGripper.py", classname="controller")
 ```
-In this case, the controller allows to interactively add air to the cavity by pressing ctrl + '+' and deflate by pressing ctrl + '-'.
+In this case, the controller allows to interactively inflate the cavity by pressing ctrl + '+' and deflate it by pressing ctrl + '-'.
 
 
 ## Solving the constraints
 
- To solve the constraints, such as the one define by the pressure actuator, we have to add to the rootNode the component FreeMotionAnimationLoop that will build up the system including contraints. The component GenericConstraintSolver will also be added to solve the constraints problem. Finally, we add the component LinearConstraintCorrection to the finger Node to take into account the correction due to the cavity constraint to the velocity and position:
+ To solve the constraints, such as the one define by the pressure actuator, we have to add to the rootNode the component FreeMotionAnimationLoop that will build up the system including constraints. The component GenericConstraintSolver will also be added to solve the constraints problem. Finally, we add the component LinearConstraintCorrection to the finger Node to take into account the correction due to the cavity constraint to the velocity and position:
 ```python
 rootNode.createObject('FreeMotionAnimationLoop')
 rootNode.createObject('GenericConstraintSolver', maxIterations="10000", tolerance="1e-3")
-.
-.
-.
+```
+
+```python
 finger.createObject('LinearSolverConstraintCorrection', solverName='directSolver')
 ```
 With all these components, the scene is now runable and can be used to inflate and deflate the finger. 
@@ -112,7 +112,7 @@ With all these components, the scene is now runable and can be used to inflate a
 
 Now, to create an actual gripper, we just need to create two more fingers and define their positions. To do that, you can use the same mesh files and use the 'translation' and 'rotation' attributes in the mesh loaders. Check the scene file in the appendix for more details.
 
-### Add something to grab and a plane to put it on
+### Add an object to grab and a plane to put it on
 
 In this scene, we create the object to grab and define it as rigid. This implies creating a new node, adding a time integration and a solver component, defining a mass, and defining constraint corrections that will be used later for collisons. 
 
@@ -136,7 +136,7 @@ In this case, the file "floorFlat.obj" is defined in a shared directory of SOFA 
 
 ### Add collisions
 
-As it stands, objects would go through each other like if they were ghosts. It is therefore necessary to handle collisions. This is simply done in SOFA by adding a collision model. In the case of 3-dimensional objects described with triangles and tetrahedra, this is typically done by adding the components 'Triangle', 'Line' and 'Point', that define the elements on the surface of the objects.
+As it stands, objects would go through each other as if they were ghosts. It is therefore necessary to handle collisions. This is simply done in SOFA by adding a collision model. In the case of 3-dimensional objects described with triangles and tetrahedra, this is typically done by adding the components 'Triangle', 'Line' and 'Point', that define the elements on the surface of the objects.
 
 #### Plane
  The case of the plane is the most straignthforward: it is described by a surface and the components of collision can be directly added to its node, specifying it is not moving during the simulation:
