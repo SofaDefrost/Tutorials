@@ -46,7 +46,7 @@ To define the constitutive law of the stiff layer, we will create a new node and
 ```python
 finger.createObject('BoxROI', name='boxROISubTopo', box='-100 22.5 -8 -19 28 8')
 modelSubTopo = finger.createChild('modelSubTopo')
-modelSubTopo.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo.tetrahedraInROI", name='container')
+modelSubTopo.createObject('Mesh', position='@loader.position', tetrahedra="@boxROISubTopo.tetrahedraInROI", name='container')
 modelSubTopo.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus='1500')
 ```
 
