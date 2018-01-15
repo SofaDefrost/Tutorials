@@ -1,11 +1,11 @@
 # Simulation
 
-The simulation is done using the SOFA Open Source Framework and the "Soft-Robots" Plugin dedicated for Real-time simulation of Soft Robots. To define the simulation, a Python scene file is created and fed as input to SOFA. In the following, we will describe, step by step, the creation of scene file that perfrom the simulation of the soft Pneunet gripper. 
+The simulation is done using the SOFA Open Source Framework and the "Soft-Robots" Plugin dedicated for Real-time simulation of Soft Robots. To define the simulation, a Python scene file is created and fed as input to SOFA. In the following, we will describe, step by step, the creation of scene file that perfom the simulation of the soft Pneunet gripper. A SOFA scene is an ordered tree of nodes (ex: ```finger.```), with parent/child relationship (set up by ```node.createChild()```). Each node has one or a few components (set up with ```node.createObject()```). Every node and component has a name and a few features. The main node at the top of the tree is called "rootNode".
 
 ## Volumetric Meshing and Loading
 
 To be able to simulate the soft robot, the first step is to discretise the soft robot in space, by creating a volumetric mesh, typically with tetrahedra. This can be done with any meshing tool such as Gmsh or CGAL. In this example, we use Gmsh. This will generate a vtk file containing all the information about postion of the nodes and connectivity between them through the tetrahedra.
-Here is the mesh that was used for each finger of the gripper:
+
 
 ![Real images](../images/PneuNets-gripper_mesh.png)
 
@@ -14,13 +14,10 @@ In a SOFA scene the mesh is loaded using the loader component:
 finger.createObject('MeshVTKLoader', name='loader', filename=path+'pneunetCutCoarse.vtk')
 ```
 
-This mesh is then stored in a TetrahedronTopology component, and a MechanicalObject component is created to store the degrees of freedom of the robot (which are the positions of all the nodes in the mesh)
+This mesh is then stored in a TetrahedronTopologyContainer  component (linked to the loader through its ```src``` attribute), and a MechanicalObject component is created to store the degrees of freedom of the robot (which are the positions of all the nodes in the mesh)
 
 ```python
 finger.createObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
-finger.createObject('TetrahedronSetTopologyModifier')
-finger.createObject('TetrahedronSetTopologyAlgorithms', template='Vec3d')
-finger.createObject('TetrahedronSetGeometryAlgorithms', template='Vec3d')
 finger.createObject('MechanicalObject', name='tetras', template='Vec3d', rx='0', dz='0')
 ```
 
@@ -44,7 +41,7 @@ This corresponds to a gravity defined along the x axis, assuming the length unit
 
 ### Stiff layer
 
-To define the constitutive law of the stiff layer, we will create a new node and define a new ForceField with stiffer parameters only on the points which constitute the layer. To easily define the indices of the points which will be selected, we use the boxROI component wich allows to define a box that will contain all the points of the layer.
+To define the constitutive law of the stiff layer, we will create a new node and define a new ForceField with stiffer parameters only on the points which constitute the layer. To easily define the indices of the points which will be selected, we use the boxROI component wich allows to define a box that will contain all the points of the layer (refered by the node "```modelSubTopo```"). The box component contains 	successively  the extreme coordinates along x, y and z
 
 ```python
 finger.createObject('BoxROI', name='boxROISubTopo', box='-100 22.5 -8 -19 28 8')
@@ -75,7 +72,7 @@ With the scene in this state, not much will happen in the simulation, merely a s
 
 ## Pneumatic Actuator and Python script controller
 
-In this section, we will introduce a pneumatic actuator that will allow to interactively simulate the filling of the finger's cavity with air. To do that, we first create a node that will take care of this task. Then, the surface mesh of the cavity has to be loaded using a mesh loader and the position are stored in a Mesh component which is a container. A MechanicalObject is created to store the degrees of freedom of the cavity which will be deforming during the simulation. The actuator in itself is created with the component SurfacePressureConstraint which is directly associated to the mesh container through the attribute "triangles". The actuation can be defined either by pressure or volume growth. Finally, a BarycentricMapping component is created to map the deformation of the cavity mesh to the mesh of the finger:
+In this section, we will introduce a pneumatic actuator that will allow to interactively simulate the inflation of the finger's cavity. To do that, we first create a node that will take care of this task. Then, the surface mesh of the cavity has to be loaded using a mesh loader and the position are stored in a Mesh component which is a container. A MechanicalObject is created to store the degrees of freedom of the cavity which will be deforming during the simulation. The actuator in itself is created with the component SurfacePressureConstraint which is directly associated to the mesh container through the attribute "triangles". The actuation can be defined either by pressure or volume growth. Finally, a BarycentricMapping component is created to map the deformation of the cavity mesh to the mesh of the finger:
 
 ```python
 cavity = finger.createChild('cavity')
