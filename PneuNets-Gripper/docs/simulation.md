@@ -27,7 +27,7 @@ finger.createObject('MechanicalObject', name='tetras', template='Vec3d', rx='0',
 
 Next, we need to define what kind of material we are going to simulate, and this is done by adding a ForceField component, which describes what internal forces are created when the object is deformed. In particular, this will define how soft or stiff the material is, if it has an elastic or more complex behaviour (Hyperelastic, plastic, etc...). In this example, we use the TetrehedronFEMForceField component which corresponds to an elastic material deformation but with large rotations. Attributes such as Young's Modulus and Poisson's ratio can be set within this component:
 ```python
-finger.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=500)
+finger.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus='500')
 ```
 The mass of the material can be defined with the UniformMass component, which assumes a uniform distribution of the mass inside the body:
 ```python
