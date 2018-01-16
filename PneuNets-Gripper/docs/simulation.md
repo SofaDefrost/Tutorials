@@ -20,7 +20,7 @@ This mesh is then stored in a ```Mesh```  component (linked to the loader throug
 finger.createObject('Mesh', src='@loader', name='container')
 finger.createObject('MechanicalObject', name='tetras', template='Vec3d', rx='0', dz='0')
 ```
-
+[Step1](step1-meshLoading.pyscn)
 ## Constitutive law of the material and Mass
 
 ### Main Body
