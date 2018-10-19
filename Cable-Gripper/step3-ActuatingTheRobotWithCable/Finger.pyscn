@@ -112,7 +112,8 @@ def createScene(rootNode):
 				fingerVisu = finger.createChild('visu')
 
 				# Add to this empty node a rendering model made of triangles and loaded from an stl file.
-				fingerVisu.createObject('OglModel', filename=path+"finger.stl", template='ExtVec3f', color="0.0 0.7 0.7")
+				fingerVisu.createObject('MeshSTLLoader', name="loader", filename=path+"finger.stl")
+				fingerVisu.createObject('OglModel', src="@loader", template='ExtVec3f', color="0.0 0.7 0.7")
 
 				# Add a BarycentricMapping to deform the rendering model to follow the ones of the mechanical model.
 				fingerVisu.createObject('BarycentricMapping')

@@ -1,4 +1,4 @@
- 
+
 import Sofa
 
 import os
@@ -18,21 +18,21 @@ def createScene(rootNode):
                 node = rootNode.createChild('node')
                 #1- Specify the input 3D surfacic mesh
                 node.createObject('MeshSTLLoader', name='mesh', filename=path+'finger.stl')
-                node.createObject('MeshGenerationFromPolyhedron', name='gen', template='Vec3d', inputPoints='@mesh.position', inputTriangles='@mesh.triangles', drawTetras='1', 
+                node.createObject('MeshGenerationFromPolyhedron', name='gen', template='Vec3d', inputPoints='@mesh.position', inputTriangles='@mesh.triangles', drawTetras='1',
 				       # This parameter controls the size of mesh tetrahedra. It provides an upper bound on the circumradius of the mesh tetrahedra.
-                                       cellSize="10", 
-                                       
+                                       cellSize="10",
+
                                        facetAngle="30",
-                                       
+
                                        # This parameter provides an upper bound for the radii of the surface Delaunay ball; a larger value may lead to larger tetrahedra.
-                                       facetSize="4",               
-                                       
-                                       # This parameter controls the shape of mesh cells. Actually, it is an upper bound for the ratio between the circumradius of a mesh 
-                                       # tetrahedron and its shortest edge. There is a theoretical bound for this parameter: the Delaunay refinement process is guaranteed 
+                                       facetSize="4",
+
+                                       # This parameter controls the shape of mesh cells. Actually, it is an upper bound for the ratio between the circumradius of a mesh
+                                       # tetrahedron and its shortest edge. There is a theoretical bound for this parameter: the Delaunay refinement process is guaranteed
                                        # to terminate for values larger than 2.
                                        cellRatio="2",   #Convergence problem if < 2
-                                       
-                                       # The approximation error between the boundary and the subdivision surface. It provides an upper bound for the distance 
+
+                                       # The approximation error between the boundary and the subdivision surface. It provides an upper bound for the distance
                                        # between the circumcenter of a surface facet and the center of a surface Delaunay ball of this facet.
                                        facetApproximation="1"
                                        )
@@ -43,6 +43,6 @@ def createScene(rootNode):
                 ##########################################
                 # Visualization                          #
                 ##########################################
-                node.createObject('OglModel', filename=path+"finger.stl", color="0.0 0.7 0.7 0.5")
-                  
+                node.createObject('OglModel', src="@mesh", color="0.0 0.7 0.7 0.5")
+
                 return rootNode

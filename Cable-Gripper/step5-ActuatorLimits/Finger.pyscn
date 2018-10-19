@@ -10,7 +10,7 @@ def createScene(rootNode):
 				rootNode.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels showCollisionModels hideBoundingCollisionModels hideForceFields showInteractionForceFields hideWireframe')
 
 				rootNode.createObject('FreeMotionAnimationLoop')
-				rootNode.createObject('QPInverseProblemSolver', printLog='1')
+				rootNode.createObject('QPInverseProblemSolver', printLog='0')
 				rootNode.createObject('CollisionPipeline', verbose="0")
 				rootNode.createObject('BruteForceDetection', name="N2")
 				rootNode.createObject('CollisionResponse', response="FrictionContact", responseParams="mu=0")
@@ -48,7 +48,8 @@ def createScene(rootNode):
 				##########################################
 
 				fingerVisu = finger.createChild('visu')
-				fingerVisu.createObject('OglModel', filename=path+"finger.stl", template='ExtVec3f', color="0.0 0.7 0.7")
+				fingerVisu.createObject('MeshSTLLoader', name="loader", filename=path+"finger.stl")
+				fingerVisu.createObject('OglModel', src="@loader", template='ExtVec3f', color="0.0 0.7 0.7")
 				fingerVisu.createObject('BarycentricMapping')
 
 				##########################################
