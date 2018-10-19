@@ -122,7 +122,7 @@ def createScene(rootNode):
         cylinder.createObject('EulerImplicit', name='odesolver')
         cylinder.createObject('CGLinearSolver', name='cylinderSolver', iterations='1000', tolerance="1e-5", threshold="1e-5")
         cylinder.createObject('MechanicalObject', name="cylinderMO", template="Rigid", scale="5", dx="92.0", dy=str(cylinderOffset), dz="-25", rx="90" ,ry="0", velocity='0 0 0 0 0 0')
-        cylinder.createObject('UniformMass', totalmass='0.030')
+        cylinder.createObject('UniformMass', totalMass='0.030')
         cylinder.createObject('UncoupledConstraintCorrection')
         cylinder.createObject('FixedConstraint', fixAll='1')
 
@@ -150,7 +150,7 @@ def createScene(rootNode):
         cylinder2.createObject('EulerImplicit', name='odesolver')
         cylinder2.createObject('CGLinearSolver', name='cylinderSolver2', iterations='1000', tolerance="1e-5", threshold="1e-5")
         cylinder2.createObject('MechanicalObject', name="cylinder2MO", template="Rigid", scale="5", dx="92.0", dy=str(-cylinderOffset), dz="-25", rx="90" ,ry="0", velocity='0 0 0 0 0 0')
-        cylinder2.createObject('UniformMass', totalmass='0.030')
+        cylinder2.createObject('UniformMass', totalMass='0.030')
         cylinder2.createObject('UncoupledConstraintCorrection')
         cylinder2.createObject('FixedConstraint', fixAll='1')
 
@@ -191,7 +191,7 @@ def createScene(rootNode):
         finger.createObject('HexahedronSetTopologyAlgorithms')
         finger.createObject('HexahedronSetGeometryAlgorithms')
         finger.createObject('MechanicalObject',name="tetras", template="Vec3d", position='@container.position', showIndices="false", showIndicesScale="4e-5", ry="0", rz="-90", dx="55", dy="50", dz="-25")
-        finger.createObject('UniformMass', totalmass='0.05')
+        finger.createObject('UniformMass', totalMass='0.05')
         finger.createObject('HexahedronFEMForceField' , template='Vec3d', name='FEM', method='large', poissonRatio='0.45',  youngModulus='200')
         finger.createObject('LinearSolverConstraintCorrection', solverName='precond')
 

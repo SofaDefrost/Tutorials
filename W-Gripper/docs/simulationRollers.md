@@ -17,7 +17,7 @@ def createCylinder(name, node, x, y, z, vx, vy, vz):
         cylinder.createObject('EulerImplicit', name='odesolver')
         cylinder.createObject('CGLinearSolver', name=name+'Solver', iterations='1000', tolerance="1e-5", threshold="1e-5")
         cylinder.createObject('MechanicalObject', name=name+"cylinderMO", template="Rigid", scale="5", dx=x, dy=y, dz=z, rx=vx ,ry=vy, rz=vz, velocity='0 0 0 0 0 0')
-        cylinder.createObject('UniformMass', totalmass='0.030')
+        cylinder.createObject('UniformMass', totalMass='0.030')
         cylinder.createObject('UncoupledConstraintCorrection')
         cylinder.createObject('FixedConstraint', fixAll='1')
 

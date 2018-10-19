@@ -34,7 +34,7 @@ def createScene(rootNode):
 				finger.createObject('TetrahedronSetGeometryAlgorithms', template='Vec3d')
 
 				finger.createObject('MechanicalObject', name='tetras', template='Vec3d')
-				finger.createObject('UniformMass', totalmass='0.5')
+				finger.createObject('UniformMass', totalMass='0.5')
 				finger.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus='18000')
 
 				finger.createObject('BoxROI', name='ROI', box='-15 0 0 5 10 15', drawBoxes='true')
